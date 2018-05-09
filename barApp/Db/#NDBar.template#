@@ -1,0 +1,15 @@
+# Database for NDBar Plugin
+# Jakub Wlodek
+# February 12, 2018
+
+include "NDPluginBase.template"
+
+
+# records needed in database:
+# barcode value
+# barcode found
+# barcode location
+# barcode type
+# numbarcodes
+
+#record(stringin, 
