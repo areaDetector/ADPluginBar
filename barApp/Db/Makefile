@@ -9,6 +9,6 @@ include $(TOP)/configure/CONFIG
 DB+=NDBar.template
 
 
-include$(TOP)/configure/RULES
+include $(TOP)/configure/RULES
 
 #add rules here
