@@ -1,3 +1,5 @@
+#TODO: ADD ZBAR to compile
+
 TOP=../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
