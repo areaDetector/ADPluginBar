@@ -10,6 +10,125 @@ include "NDPluginBase.template"
 # barcode found
 # barcode location
 # barcode type
-# numbarcodes
+# numbercodes
 
-record(stringin, 
+#first strings for message and type as waveforms
+record(waveform, "$(P)$(R)BarcodeMessage")
+{
+	field(DTYP, "asynOctetWrite")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
+	field(FTLV, "CHAR")
+	field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)BarcodeType")
+{
+	field(DTYP, "asynOctetWrite")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
+	field(FTLV, "CHAR")
+	field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
+	field(DTYP, "octetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
+        field(FTVL, "CHAR")
+        field(NELM, "256")
+	field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)$(R)BarcodeType_RBV")
+{
+	field(DTYP, "octetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
+        field(FTVL, "CHAR")
+        field(NELM, "256")
+	field(SCAN, "I/O Intr")
+}
+
+#binary check if barcode was found
+record(bi, "$(P)$(R)BarcodeFound")
+{
+        field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_FOUND")
+	field(OSV, "MINOR")
+	field(ZSV, "NO_ALARM")
+	field(ZNAM, "No")
+	field(ONAM, "Yes")
+	field(SCAN, "I/O Intr")
+}
+
+#number of codes
+record(ai, "$(P)$(R)NumberCodes")
+{
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
+	field(OSV, "MINOR")
+	field(ZSV, "NO_ALARM")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)NumberCodes_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
+	field(SCAN, "I/O Intr")
+}	
+
+#cooridnates of corners of discovered barcodes
+record(ai, "$(P)$(R)UpperRight")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)UpperLeft")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)LowerRight")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)LowerLeft")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_LEFT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao "$(P)$(R)UpperLeft_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)UpperRight_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)LowerLeft_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))Lower_LEFT")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)LowerRight_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT")
+	field(SCAN, "I/O Intr")
+}
+
