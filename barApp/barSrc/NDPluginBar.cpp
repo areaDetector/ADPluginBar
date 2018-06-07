@@ -142,7 +142,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	rowSize = pScratch->dims[arrayInfo.xDim].size;
 	numRows = pScratch->dims[arrayInfo.yDim].size;
 
-	cv::Mat img = cv::Mat(numRows, rowSize, CV_8UC1);
+	Mat img = Mat(numRows, rowSize, CV_8UC1);
 
 	vector<bar_QR_code> codes_in_image;
 
