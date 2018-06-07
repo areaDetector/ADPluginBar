@@ -219,7 +219,7 @@ static const iocshArg * const initArgs[] = {&initArg0,
 static const iocshFuncDef initFuncDef = {"NDBarConfigure",9,initArgs};
 static void initCallFunc(const iocshArgBuf *args)
 {
-    NDEdgeConfigure(args[0].sval, args[1].ival, args[2].ival,
+    NDBarConfigure(args[0].sval, args[1].ival, args[2].ival,
                        args[3].sval, args[4].ival, args[5].ival,
                        args[6].ival, args[7].ival, args[8].ival);
 }
