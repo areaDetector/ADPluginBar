@@ -12,10 +12,14 @@
 #define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //waveform
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
 #define NDPluginBarBacodeFoundString "BARCODE_FOUND" //asynInt32
-#define NDPluginBarUpperLeftString "UPPER_LEFT" //asynInt32
-#define NDPluginBarUpperRightString "UPPER_RIGHT" //asynInt32
-#define NDPluginBarLowerLeftString "LOWER_LEFT" //asynInt32
-#define NDPluginBarLowerLeftString "LOWER_LEFT" //asynInt32
+#define NDPluginBarUpperLeftString "UPPER_LEFT_X" //asynInt32
+#define NDPluginBarUpperRightString "UPPER_RIGHT_X" //asynInt32
+#define NDPluginBarLowerLeftString "LOWER_LEFT_X" //asynInt32
+#define NDPluginBarLowerLeftString "LOWER_LEFT_X" //asynInt32
+#define NDPluginBarUpperLeftString "UPPER_LEFT_Y" //asynInt32
+#define NDPluginBarUpperRightString "UPPER_RIGHT_Y" //asynInt32
+#define NDPluginBarLowerLeftString "LOWER_LEFT_Y" //asynInt32
+#define NDPluginBarLowerLeftString "LOWER_LEFT_Y" //asynInt32
 
 
 //class that does barcode readings
@@ -43,17 +47,28 @@ class NDPluginBar : public NDPluginDriver {
 		int NDPluginBarNumberCodes;
 
 		//upper left pixel of found bar code
-		int NDPluginBarUpperLeft;
+		int NDPluginBarUpperLeftX;
 		
 		//upper right pixel of found bar code
-		int NDPluginBarUpperRight;
+		int NDPluginBarUpperRightX;
 
 		//lower left pixel of found bar code
-		int NDPluginBarLowerLeft;
+		int NDPluginBarLowerLeftX;
 
 		//lower right pixel of found bar code
-		int NDPluginBarLowerRight;
+		int NDPluginBarLowerRightX;
 		
+		//upper left pixel of found bar code
+		int NDPluginBarUpperLeftY;
+		
+		//upper right pixel of found bar code
+		int NDPluginBarUpperRightY;
+
+		//lower left pixel of found bar code
+		int NDPluginBarLowerLeftY;
+
+		//lower right pixel of found bar code
+		int NDPluginBarLowerRightY;
 	private:
 
 };

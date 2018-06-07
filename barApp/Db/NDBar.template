@@ -76,59 +76,115 @@ record(ao, "$(P)$(R)NumberCodes_RBV")
 }	
 
 #cooridnates of corners of discovered barcodes
-record(ai, "$(P)$(R)UpperRight")
+record(ai, "$(P)$(R)UpperRightX")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT_X")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)$(R)UpperLeft")
+record(ai, "$(P)$(R)UpperLeftX")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT_X")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)LowerRightX")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_X")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)LowerLeftX")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_LEFT_X")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao "$(P)$(R)UpperLeftX_RBV")
 {
 	field(DTYP, "asynInt32")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)$(R)LowerRight")
+record(ao, "$(P)$(R)UpperRightX_RBV")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT_X")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)$(R)LowerLeft")
+record(ao, "$(P)$(R)LowerLeftX_RBV")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_LEFT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))Lower_LEFT_X")
 	field(SCAN, "I/O Intr")
 }
 
-record(ao "$(P)$(R)UpperLeft_RBV")
+record(ao, "$(P)$(R)LowerRightX_RBV")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_X")
 	field(SCAN, "I/O Intr")
 }
 
-record(ao, "$(P)$(R)UpperRight_RBV")
+#cooridnates of corners of discovered barcodes
+record(ai, "$(P)$(R)UpperRightY")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT_Y")
 	field(SCAN, "I/O Intr")
 }
 
-record(ao, "$(P)$(R)LowerLeft_RBV")
+record(ai, "$(P)$(R)UpperLeftY")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))Lower_LEFT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT_Y")
 	field(SCAN, "I/O Intr")
 }
 
-record(ao, "$(P)$(R)LowerRight_RBV")
+record(ai, "$(P)$(R)LowerRightY")
 {
 	field(DTYP, "asynInt32")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_Y")
 	field(SCAN, "I/O Intr")
 }
 
+record(ai, "$(P)$(R)LowerLeftY")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_LEFT_Y")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao "$(P)$(R)UpperLeftY_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_LEFT_Y")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)UpperRightY_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))UPPER_RIGHT_Y")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)LowerLeftY_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))Lower_LEFT_Y")
+	field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)LowerRightY_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_Y")
+	field(SCAN, "I/O Intr")
+}
