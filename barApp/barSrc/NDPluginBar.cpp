@@ -95,6 +95,9 @@ static void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
     cout << "Type : " << barQR.type << endl;
     cout << "Data : " << barQR.data << endl;
+    setStringParam(NDPluginBarBarcodeType, barQR.type);
+    setStringParam(NDPluginBarBarcodeMessage, barQR.data);
+    setIntegerParam(NDPluginBarBarcodeFound, 1);
     for(int i = 0; i< symbol->get_location_size(); i++){
       barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
     }
