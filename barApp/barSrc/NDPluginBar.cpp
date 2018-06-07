@@ -14,7 +14,7 @@
 #include <math.h>
 #include <iostream>
 
-#include <epicsSting.h>
+#include <epicsString.h>
 #include <iocsh.h>
 #include "NDArray.h"
 #include "NDPluginBar.h"
