@@ -12,8 +12,6 @@ include "NDPluginBase.template"
 # barcode type
 # numbercodes
 
-<<<<<<< HEAD
-=======
 #first strings for message and type as waveforms
 record(waveform, "$(P)$(R)BarcodeMessage")
 {
@@ -190,4 +188,3 @@ record(ao, "$(P)$(R)LowerRightY_RBV")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_Y")
 	field(SCAN, "I/O Intr")
 }
->>>>>>> caab058107e9b8e195beeb858d9b12241e25fe6d
