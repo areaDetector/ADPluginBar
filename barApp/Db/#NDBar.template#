@@ -10,6 +10,4 @@ include "NDPluginBase.template"
 # barcode found
 # barcode location
 # barcode type
-# numbarcodes
-
-#record(stringin, 
+# numbarco

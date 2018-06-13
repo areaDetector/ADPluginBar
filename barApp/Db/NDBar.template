@@ -12,4 +12,3 @@ include "NDPluginBase.template"
 # barcode type
 # numbarcodes
 
-record(stringin, 
