@@ -1,11 +1,11 @@
-#ifndef NDPlufinBar_H
+#ifndef NDPluginBar_H
 #define NDPluginBar_H
 
 #include "NDPluginDriver.h"
 
 #define BAR_VERSION      0
-#define BAR_REVISION     0
-#define BAR_MODIFICATION 0
+#define BAR_REVISION     1
+#define BAR_MODIFICATION 1
 
 //Here I will define all of the output data types once the database is written
 #define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //waveform
