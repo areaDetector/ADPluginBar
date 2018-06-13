@@ -1,3 +1,5 @@
+#TODO: ADD ZBAR to compile
+
 TOP=../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
@@ -17,7 +19,7 @@ INC += NDPluginBar.h
 
 LIBRARY_IOC += NDPluginBar
 
-NDPluginEdge_SRCS += NDPluginBar.cpp
+NDPluginBar_SRCS += NDPluginBar.cpp
 
 #TODO: When compiling external opencv+zbar test, I needed to run:
 # g++ test.cpp $(pkg-config --libs opencv --cflags) $(pkg-config --libs zbar --cflags) -o check
@@ -25,7 +27,12 @@ NDPluginEdge_SRCS += NDPluginBar.cpp
 
 USR_INCLUDES += -I$(OPENCV_INCLUDE)
 ifdef OPENCV_LIB
-  NDPluginEdge_DIR += $(OPENCV_LIB)
+  NDPluginBar_DIR += $(OPENCV_LIB)
+endif
+
+USR_INCLUDES += -I$(ZBAR_INCLUDE)
+ifdef ZBAR_LIB
+  NDPluginBar_DIR += $(ZBAR_LIB)
 endif
 
 include $(AREA_DETECTOR)/ADCore/ADApp/commonLibraryMakefile

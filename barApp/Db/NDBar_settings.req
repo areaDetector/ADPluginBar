@@ -1,0 +1,8 @@
+file "NDPluginBase_settings.req", P=$(P), R=$(R)
+$(P)$(R)BarcodeMessage
+$(P)$(R)BarcodeType
+$(P)$(R)NumberCodes
+$(P)$(R)UpperLeft
+$(P)$(R)UpperRight
+$(P)$(R)LowerLeft
+$(P)$(R)LowerRight

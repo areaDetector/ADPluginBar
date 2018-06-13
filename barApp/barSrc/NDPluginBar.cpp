@@ -14,7 +14,7 @@
 #include <math.h>
 #include <iostream>
 
-#include <epicsSting.h>
+#include <epicsString.h>
 #include <iocsh.h>
 #include "NDArray.h"
 #include "NDPluginBar.h"
@@ -95,6 +95,9 @@ static void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
     cout << "Type : " << barQR.type << endl;
     cout << "Data : " << barQR.data << endl;
+    setStringParam(NDPluginBarBarcodeType, barQR.type);
+    setStringParam(NDPluginBarBarcodeMessage, barQR.data);
+    setIntegerParam(NDPluginBarBarcodeFound, 1);
     for(int i = 0; i< symbol->get_location_size(); i++){
       barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
     }
@@ -142,7 +145,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	rowSize = pScratch->dims[arrayInfo.xDim].size;
 	numRows = pScratch->dims[arrayInfo.yDim].size;
 
-	cv::Mat img = cv::Mat(numRows, rowSize, CV_8UC1);
+	Mat img = Mat(numRows, rowSize, CV_8UC1);
 
 	vector<bar_QR_code> codes_in_image;
 
@@ -219,7 +222,7 @@ static const iocshArg * const initArgs[] = {&initArg0,
 static const iocshFuncDef initFuncDef = {"NDBarConfigure",9,initArgs};
 static void initCallFunc(const iocshArgBuf *args)
 {
-    NDEdgeConfigure(args[0].sval, args[1].ival, args[2].ival,
+    NDBarConfigure(args[0].sval, args[1].ival, args[2].ival,
                        args[3].sval, args[4].ival, args[5].ival,
                        args[6].ival, args[7].ival, args[8].ival);
 }
