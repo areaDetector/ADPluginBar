@@ -24,7 +24,7 @@ CHECK_RELEASE = YES
 # To install files into a location other than $(TOP) define
 #   INSTALL_LOCATION here.
 #INSTALL_LOCATION=</path/name/to/install/top>
-INSTALL_LOCATION=$(AREA_DETECTOR)/ADCore
+#INSTALL_LOCATION=$(AREA_DETECTOR)/ADCore
 
 # Set this when your IOC and the host use different paths
 #   to access the application. This will be needed to boot
