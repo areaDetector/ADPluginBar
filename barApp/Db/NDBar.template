@@ -39,7 +39,7 @@ record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
 
 record(waveform, "$(P)$(R)BarcodeType_RBV")
 {
-	field(DTYP, "octetRead")
+	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
         field(FTVL, "CHAR")
         field(NELM, "256")
