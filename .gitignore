@@ -1,6 +1,9 @@
 *~
 *#
+bin
+lib
+include
 db
 dbd
-lib
+envPaths*
 O.linux-x86_64
