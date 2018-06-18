@@ -25,12 +25,16 @@ NDPluginBar_SRCS += NDPluginBar.cpp
 # g++ test.cpp $(pkg-config --libs opencv --cflags) $(pkg-config --libs zbar --cflags) -o check
 #Must link Opencv and zbar libraries here
 
-USR_INCLUDES += -I$(OPENCV_INCLUDE)
+ifdef OPENCV_INCLUDE
+  USR_INCLUDES += -I$(OPENCV_INCLUDE)
+endif 
 ifdef OPENCV_LIB
   NDPluginBar_DIR += $(OPENCV_LIB)
 endif
 
-USR_INCLUDES += -I$(ZBAR_INCLUDE)
+ifdef ZBAR_INCLUDE
+  USR_INCLUDES += -I$(ZBAR_INCLUDE)
+endif 
 ifdef ZBAR_LIB
   NDPluginBar_DIR += $(ZBAR_LIB)
 endif
