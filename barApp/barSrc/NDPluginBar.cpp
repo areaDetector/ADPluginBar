@@ -65,11 +65,11 @@ static const char *driverName="NDPluginBar";
 */
 
 //structure used to store the type of code read, the data stored in it, and its position
-typedef struct{
-  string type;
-  string data;
-  vector <Point> position;
-}bar_QR_code;
+//typedef struct{
+//  string type;
+//  string data;
+//  vector <Point> position;
+//}bar_QR_code;
 
 
 /*
@@ -80,7 +80,7 @@ and then it is scanned by zbar. We then iterate over the discovered symbols in t
 create a instance of the struct. the struct is added to the vector, and the bars location
 data and type are stored, and printed.
  */
-static void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
   ImageScanner zbarScanner;
   zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
   Mat imGray;
@@ -110,10 +110,10 @@ static void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 //so the user can confirm that the correct area of the image was discovered
 static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
   for(int i = 0; i<codes_in_image.size(); i++){
-    vector<Point> bar_points = codes_in_image[i].position;
+    vector<Point> barPoints = codes_in_image[i].position;
     vector<Point> outside;
-    if(bar_points.size() > 4) convexHull(barPoints, outside);
-    else outside = points;
+    if(barPoints.size() > 4) convexHull(barPoints, outside);
+    else outside = barPoints;
     int n = outside.size();
     for(int j = 0; j<n; j++){
       line(im, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
@@ -128,8 +128,8 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	NDArray *pScratch = NULL;
 	NDArrayInfo arrayInfo;
 
-	unsigned int numrows, rowsize;
-	unsigned char *indata, *outdata;
+	unsigned int numRows, rowSize;
+	unsigned char *inData, *outData;
 	int barcodes_found = 0;
 
 
@@ -179,9 +179,9 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
                    ASYN_MULTIDEVICE, 1, priority, stackSize, 1)
 {
 
-  char vesrsionString[25];
+  char versionString[25];
 
-  createParam (NDPluginBarMessageString, asynParamFloat64, &NDPluginBarMessage);
+  createParam (NDPluginBarBarcodeMessageString, asynParamFloat64, &NDPluginBarBarcodeMessage);
    setStringParam(NDPluginDriverPluginType, "NDPluginBar");
     epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d",
                 BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
@@ -234,5 +234,5 @@ extern "C" void NDBarRegister(void)
 }
 
 extern "C" {
-epicsExportRegistrar(NDEdgeRegister);
+epicsExportRegistrar(NDBarRegister);
 }
