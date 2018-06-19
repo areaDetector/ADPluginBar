@@ -111,7 +111,8 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 //uses opencv methods with the locations of the discovered codes to place
 //bounding boxes around the areas of the image that contain barcodes. This is
 //so the user can confirm that the correct area of the image was discovered
-static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
+static void show_bar_codes(Mat &im, Mat &result, vector<bar_QR_code> &codes_in_image){
+  result = im;
   for(int i = 0; i<codes_in_image.size(); i++){
     vector<Point> barPoints = codes_in_image[i].position;
     vector<Point> outside;
@@ -119,11 +120,10 @@ static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
     else outside = barPoints;
     int n = outside.size();
     for(int j = 0; j<n; j++){
-      line(im, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
+      line(result, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
     }
   }
-  imshow("Codes Identified", im);
-  waitKey(0);
+  return result;
 }
 
 //process callbacks function inherited from NDArray Plugin
@@ -170,7 +170,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	numRows = pScratch->dims[arrayInfo.yDim].size;
 
 	Mat img = Mat(numRows, rowSize, CV_8UC1);
-
+	Mat barcodeFound;
 	vector<bar_QR_code> codes_in_image;
 
 	inData = (unsigned char *)pScratch->pData;
@@ -179,9 +179,10 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	
 	decode_bar_code(img, codes_in_image);
-	show_bar_codes(img, codes_in_image);
+	barcodeFound = show_bar_codes(img, barcodeFound, codes_in_image);
 
 	this->lock();
+	outData = (unsigned char *) barcodeFound.data;
 
 	if (NULL != pScratch)
 	  pScratch->release();

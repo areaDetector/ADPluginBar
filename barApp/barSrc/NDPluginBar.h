@@ -48,10 +48,10 @@ class NDPluginBar : public NDPluginDriver {
 
 		//in this section, once i define the database values, I will have to define them here
 		//message contained in bar code
-		char* NDPluginBarBarcodeMessage;
+		int NDPluginBarBarcodeMessage;
 
 		//type of bar code i.e. QR, BAR
-		char* NDPluginBarBarcodeType;
+		int NDPluginBarBarcodeType;
 		
 		//if there is a bar code found
 		int NDPluginBarBarcodeFound;
