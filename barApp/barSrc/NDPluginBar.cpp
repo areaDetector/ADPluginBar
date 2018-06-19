@@ -13,7 +13,9 @@
 #include <string.h>
 #include <math.h>
 #include <iostream>
+#include <stdio.h>
 
+#include <epicsMutex.h>
 #include <epicsString.h>
 #include <iocsh.h>
 #include "NDArray.h"
@@ -81,6 +83,7 @@ create a instance of the struct. the struct is added to the vector, and the bars
 data and type are stored, and printed.
  */
 void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Barcode reader has begun decoding process\n",  driverName, functionName);
   ImageScanner zbarScanner;
   zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
   Mat imGray;
@@ -125,9 +128,12 @@ static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 
 //process callbacks function inherited from NDArray Plugin
 void NDPluginBar::processCallbacks(NDArray *pArray){
+
+  //start with an empty array for copy and array info
 	NDArray *pScratch = NULL;
 	NDArrayInfo arrayInfo;
 
+	//some information we need
 	unsigned int numRows, rowSize;
 	unsigned char *inData, *outData;
 	int barcodes_found = 0;
@@ -135,12 +141,30 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	static const char* functionName = "processCallbacks";
 
+	// Mono image is OK
+	if (pArray->ndims != 2)
+	{
+	            asynPrint(
+		    this->pasynUserSelf, 
+		    ASYN_TRACE_ERROR, 
+		    "%s::%s Please convert barcode reader plugin input image format to mono\n", 
+		    driverName, 
+		    functionName);
+	  return;
+	}
+
 	//call base class
 
 	NDPluginDriver::beginProcessCallbacks(pArray);
-
+	pArray->getInfo(&arrayInfo);
+	rowSize = pArray->dims[arrayInfo.xDim].size;
+	numRows = pArray->dims[arrayInfo.yDim].size;
 	this->unlock();
+	NDDimension_t scratch_dims[2];
+	pScratch->initDimension(&scratch_dims[0], rowsize);
+	pScratch->initDimesion(&scratch_dims[1], numRows);
 	this->pNDArrayPool->convert(pArray, &pScratch, NDUInt8);
+
 	pScratch->getInfo(&arrayInfo);
 	rowSize = pScratch->dims[arrayInfo.xDim].size;
 	numRows = pScratch->dims[arrayInfo.yDim].size;
@@ -151,7 +175,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	inData = (unsigned char *)pScratch->pData;
 	outData = (unsigned char *)img.data;
-	memcpy(outData, inData, arrayInfo.nElements * sizeof(*inData));
+	memcpy(outData, inData, arrayInfo.nElements * sizeof(unsigned char));
 
 	
 	decode_bar_code(img, codes_in_image);

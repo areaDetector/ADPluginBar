@@ -47,7 +47,18 @@ record(waveform, "$(P)$(R)BarcodeType_RBV")
 }
 
 #binary check if barcode was found
-record(bi, "$(P)$(R)BarcodeFound")
+record(bo, "$(P)$(R)BarcodeFound")
+{
+        field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_FOUND")
+	field(OSV, "MINOR")
+	field(ZSV, "NO_ALARM")
+	field(ZNAM, "No")
+	field(ONAM, "Yes")
+	field(SCAN, "I/O Intr")
+}
+
+record(bi, "$(P)$(R)BarcodeFound_RBV")
 {
         field(DTYP, "asynInt32")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_FOUND")
