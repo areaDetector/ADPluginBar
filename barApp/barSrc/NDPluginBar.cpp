@@ -97,7 +97,10 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		barQR.data = symbol->get_data();
 
 		//debugging
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s has detected a %s with message %s\n",driverName, functionName, barQR.type, barQR.data);
+		//asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s has detected a %s with message %s\n",driverName, functionName, barQR.type, barQR.data);
+
+		cout << "Type: " << barQR.type << endl;
+		cout << "Data: " << barQR.data << endl << endl;
 
 		//set PVs
 		//setStringParam(NDPluginBarBarcodeType, barQR.type);
@@ -125,7 +128,7 @@ static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 		else outside = barPoints;
 		int n = outside.size();
 		for(int j = 0; j<n; j++){
-			line(im, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
+			line(im, outside[j], outside[(j+1)%n], Scalar(255,255,255),3);
 		}
 	}
 	imshow("Barcode found", im);
@@ -196,7 +199,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	//decode the bar codes in the image if any
 	decode_bar_code(img, codes_in_image);
-	//show_bar_codes(img, codes_in_image);
+	show_bar_codes(img, codes_in_image);
 
 	this->lock();
 

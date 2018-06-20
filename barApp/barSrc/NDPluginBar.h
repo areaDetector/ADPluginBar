@@ -25,7 +25,7 @@ using namespace zbar;
 
 //version numbers
 #define BAR_VERSION      0
-#define BAR_REVISION     1
+#define BAR_REVISION     2
 #define BAR_MODIFICATION 1
 
 
