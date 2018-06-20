@@ -38,6 +38,6 @@ CHECK_RELEASE = YES
 -include $(AREA_DETECTOR)/configure/CONFIG_SITE.$(EPICS_HOST_ARCH)
 -include $(AREA_DETECTOR)/configure/CONFIG_SITE.$(EPICS_HOST_ARCH).Common
 ifdef T_A
-  -include $(AREA_DETECTOR)/configure/CONFIG_SITE.Common.$(T_A)
-  -include $(AREA_DETECTOR)/configure/CONFIG_SITE.$(EPICS_HOST_ARCH).$(T_A)
+	-include $(AREA_DETECTOR)/configure/CONFIG_SITE.Common.$(T_A)
+	-include $(AREA_DETECTOR)/configure/CONFIG_SITE.$(EPICS_HOST_ARCH).$(T_A)
 endif
