@@ -13,15 +13,15 @@ include "NDPluginBase.template"
 # numbercodes
 
 #first strings for message and type as waveforms
-record(waveform, "$(P)$(R)BarcodeMessage")
+record(stringout, "$(P)$(R)BarcodeMessage")
 {
 	field(DTYP, "asynOctetWrite")
-	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
 }
 
-record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
+record(stringin, "$(P)$(R)BarcodeMessage_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
         field(FTVL, "CHAR")
@@ -29,15 +29,15 @@ record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
 	field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)BarcodeType")
+record(stringout, "$(P)$(R)BarcodeType")
 {
 	field(DTYP, "asynOctetWrite")
-	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
 }
 
-record(waveform, "$(P)$(R)BarcodeType_RBV")
+record(stringin, "$(P)$(R)BarcodeType_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
