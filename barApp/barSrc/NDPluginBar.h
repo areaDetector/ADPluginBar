@@ -56,6 +56,8 @@ class NDPluginBar : public NDPluginDriver {
 		NDPluginBar(const char *portName, int queueSize, int blockingCallbacks,
 			const char* NDArrayPort, int NDArrayAddr, int maxBuffers,
 			size_t maxMemory, int priority, int stackSize);
+		//void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
+		//Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
 		void processCallbacks(NDArray *pArray);
 
 	protected:

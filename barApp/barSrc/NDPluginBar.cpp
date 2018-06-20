@@ -138,11 +138,14 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	static const char* functionName = "processCallbacks";
 
+	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
+	return;
+
 	// check if image is in mono form
-	if (pArray->ndims != 2){
-	        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
-		return;
-	}
+	//if (pArray->ndims != 2){
+	        //asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
+		//return;
+	//}
 
 	//call base class and get information about frame
 	NDPluginDriver::beginProcessCallbacks(pArray);
@@ -181,7 +184,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	//decode the bar codes in the image if any
 	decode_bar_code(img, codes_in_image);
-	barcodeFound = show_bar_codes(img, codes_in_image);
+	//barcodeFound = show_bar_codes(img, codes_in_image);
 
 	this->lock();
 
@@ -231,7 +234,9 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
 
-	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
+	setStringParam(NDPluginDriverPluginType, "NDBar");
+	setStringParam(NDPluginBarBarcodeMessage, "Barcode test");
+	setStringParam(NDPluginBarBarcodeType, "QR");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
 	setStringParam(NDDriverVersion, versionString);
 	connectToArrayPort();

@@ -15,11 +15,12 @@ include "NDPluginBase.template"
 #first strings for message and type as waveforms
 record(waveform, "$(P)$(R)BarcodeMessage")
 {
+	field(PINI, "YES")
 	field(DTYP, "asynOctetWrite")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
 	field(FTLV, "CHAR")
 	field(NELM, "256")
-	info(autosaveFields, "VAL")
+	field(VAL, "No Message Found")
 }
 
 record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
@@ -32,11 +33,12 @@ record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
 
 record(waveform, "$(P)$(R)BarcodeType")
 {
+	field(PINI, "YES")
 	field(DTYP, "asynOctetWrite")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-	info(autosaveFields, "VAL")
+	field(VAL, "None")
 }
 
 record(waveform, "$(P)$(R)BarcodeType_RBV")
