@@ -76,13 +76,13 @@ create a instance of the struct. the struct is added to the vector, and the bars
 data and type are stored, and printed.
  */
 void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
-	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Barcode reader has begun decoding process\n",  driverName, functionName);
+	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "Barcode reader has begun decoding process\n");
 	ImageScanner zbarScanner;
 	zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
 	Mat imGray;
 	cvtColor(im, imGray, CV_BGR2GRAY);
 	Image image(im.cols, im.rows, "Y800", (uchar*) imGray.data, im.cols *im.rows);
-	int n = zbarScanner.scan(image);
+	zbarScanner.scan(image);
 
 	for(Image::SymbolIterator symbol = image.symbol_begin(); symbol!=image.symbol_end();++symbol){
 
@@ -108,8 +108,8 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 //uses opencv methods with the locations of the discovered codes to place
 //bounding boxes around the areas of the image that contain barcodes. This is
 //so the user can confirm that the correct area of the image was discovered
-static void show_bar_codes(Mat &im, Mat &result, vector<bar_QR_code> &codes_in_image){
-	result = im;
+static Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
+	Mat result = im;
 	for(int i = 0; i<codes_in_image.size(); i++){
 		vector<Point> barPoints = codes_in_image[i].position;
 		vector<Point> outside;
@@ -162,8 +162,8 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	//create a copy of the array
 	NDDimension_t scratch_dims[2];
-	pScratch->initDimension(&scratch_dims[0], rowsize);
-	pScratch->initDimesion(&scratch_dims[1], numRows);
+	pScratch->initDimension(&scratch_dims[0], rowSize);
+	pScratch->initDimension(&scratch_dims[1], numRows);
 	this->pNDArrayPool->convert(pArray, &pScratch, NDUInt8);
 
 	pScratch->getInfo(&arrayInfo);
@@ -181,7 +181,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	//decode the bar codes in the image if any
 	decode_bar_code(img, codes_in_image);
-	barcodeFound = show_bar_codes(img, barcodeFound, codes_in_image);
+	barcodeFound = show_bar_codes(img, codes_in_image);
 
 	this->lock();
 
@@ -211,7 +211,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	char versionString[25];
 
 	//for debugging
-	asynPrint(this->pasynUserSelf, "%s::%s is running\n", driverName, functionName);
+	//asynPrint(this->pasynUserSelf, "%s::%s is running\n", driverName, functionName);
 
 	//basic barcode parameters
 	createParam(NDPluginBarBarcodeMessageString, asynParamOctet, &NDPluginBarBarcodeMessage);
@@ -232,8 +232,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
-	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d",
-	BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
+	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
 	setStringParam(NDDriverVersion, versionString);
 	connectToArrayPort();
 }
