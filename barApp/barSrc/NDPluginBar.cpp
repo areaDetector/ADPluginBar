@@ -76,12 +76,17 @@ create a instance of the struct. the struct is added to the vector, and the bars
 data and type are stored, and printed.
  */
 void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+
 	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "Barcode reader has begun decoding process\n");
+	static const char* functionName = "decode_bar_code";
+
+	//initialize the image and the scanner object
 	ImageScanner zbarScanner;
 	zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
-	Mat imGray;
-	cvtColor(im, imGray, CV_BGR2GRAY);
-	Image image(im.cols, im.rows, "Y800", (uchar*) imGray.data, im.cols *im.rows);
+	// if the image is in color, we convert it to grayscale
+	//Mat imGray;
+
+	Image image(im.cols, im.rows, "Y800", (uchar*) im.data, im.cols *im.rows);
 	zbarScanner.scan(image);
 
 	for(Image::SymbolIterator symbol = image.symbol_begin(); symbol!=image.symbol_end();++symbol){
@@ -91,12 +96,16 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		barQR.type = symbol->get_type_name();
 		barQR.data = symbol->get_data();
 
-		//cout << "Type : " << barQR.type << endl;
-		//cout << "Data : " << barQR.data << endl;
+		//debugging
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s has detected a %s with message %s\n",driverName, functionName, barQR.type, barQR.data);
+
 		//set PVs
-		setStringParam(NDPluginBarBarcodeType, barQR.type);
-		setStringParam(NDPluginBarBarcodeMessage, barQR.data);
-		setIntegerParam(NDPluginBarBarcodeFound, 1);
+		//setStringParam(NDPluginBarBarcodeType, barQR.type);
+		//setStringParam(NDPluginBarBarcodeMessage, barQR.data);
+		int num_codes;
+		getIntegerParam(NDPluginBarNumberCodes, &num_codes);
+		setIntegerParam(NDPluginBarNumberCodes, num_codes+1);
+
 		//push location data
 		for(int i = 0; i< symbol->get_location_size(); i++){
 			barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
@@ -108,8 +117,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 //uses opencv methods with the locations of the discovered codes to place
 //bounding boxes around the areas of the image that contain barcodes. This is
 //so the user can confirm that the correct area of the image was discovered
-static Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
-	Mat result = im;
+static void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 	for(int i = 0; i<codes_in_image.size(); i++){
 		vector<Point> barPoints = codes_in_image[i].position;
 		vector<Point> outside;
@@ -117,10 +125,11 @@ static Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 		else outside = barPoints;
 		int n = outside.size();
 		for(int j = 0; j<n; j++){
-			line(result, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
+			line(im, outside[j], outside[(j+1)%n], Scalar(0,255,0),3);
 		}
 	}
-	return result;
+	imshow("Barcode found", im);
+	waitKey(0);
 }
 
 
@@ -138,14 +147,14 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	static const char* functionName = "processCallbacks";
 
-	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
-	return;
+	//asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
+	//return;
 
 	// check if image is in mono form
-	//if (pArray->ndims != 2){
-	        //asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
-		//return;
-	//}
+	if (pArray->ndims != 2){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
+		return;
+	}
 
 	//call base class and get information about frame
 	NDPluginDriver::beginProcessCallbacks(pArray);
@@ -156,7 +165,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	getIntegerParam(NDPluginBarBarcodeFound, &barcodes_found);
 
 	if(barcodes_found == 1){
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please rest the plugin to read additional barcodes\n", driverName, functionName);
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please reset the plugin to read additional barcodes\n", driverName, functionName);
 		return;
 	}
 
@@ -182,13 +191,14 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	outData = (unsigned char *)img.data;
 	memcpy(outData, inData, arrayInfo.nElements * sizeof(unsigned char));
 
+	//imshow("test", img);
+	//waitKey(0);
+
 	//decode the bar codes in the image if any
 	decode_bar_code(img, codes_in_image);
-	//barcodeFound = show_bar_codes(img, codes_in_image);
+	//show_bar_codes(img, codes_in_image);
 
 	this->lock();
-
-	outData = (unsigned char *) barcodeFound.data;
 
 	//release the array
 	if (NULL != pScratch)
@@ -234,9 +244,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
 
-	setStringParam(NDPluginDriverPluginType, "NDBar");
-	setStringParam(NDPluginBarBarcodeMessage, "Barcode test");
-	setStringParam(NDPluginBarBarcodeType, "QR");
+	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
 	setStringParam(NDDriverVersion, versionString);
 	connectToArrayPort();

@@ -76,9 +76,10 @@ record(bi, "$(P)$(R)BarcodeFound_RBV")
 #number of codes
 record(ao, "$(P)$(R)NumberCodes")
 {
+	field(PINI, "YES")
 	field(DTYP, "asynInt32")
 	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
-	field(SCAN, "I/O Intr")
+	field(VAL, "0")
 }
 
 record(ai, "$(P)$(R)NumberCodes_RBV")
