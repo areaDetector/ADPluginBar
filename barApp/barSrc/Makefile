@@ -10,7 +10,7 @@ include $(TOP)/configure/CONFIG
 # so we get automatic template instantiation.
 # This is what we want for the source files that define template functions.
 ifeq (vxWorks,$(findstring vxWorks, $(T_A)))
-CODE_CXXFLAGS=
+	CODE_CXXFLAGS=
 endif
 
 DBD += NDPluginBar.dbd
@@ -26,17 +26,17 @@ NDPluginBar_SRCS += NDPluginBar.cpp
 #Must link Opencv and zbar libraries here
 
 ifdef OPENCV_INCLUDE
-  USR_INCLUDES += -I$(OPENCV_INCLUDE)
-endif 
+	USR_INCLUDES += -I$(OPENCV_INCLUDE)
+endif
 ifdef OPENCV_LIB
-  NDPluginBar_DIR += $(OPENCV_LIB)
+	NDPluginBar_DIR += $(OPENCV_LIB)
 endif
 
 ifdef ZBAR_INCLUDE
-  USR_INCLUDES += -I$(ZBAR_INCLUDE)
-endif 
+	USR_INCLUDES += -I$(ZBAR_INCLUDE)
+endif
 ifdef ZBAR_LIB
-  NDPluginBar_DIR += $(ZBAR_LIB)
+	NDPluginBar_DIR += $(ZBAR_LIB)
 endif
 
 include $(AREA_DETECTOR)/ADCore/ADApp/commonLibraryMakefile
