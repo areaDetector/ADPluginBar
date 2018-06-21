@@ -5,52 +5,55 @@
 include "NDPluginBase.template"
 
 
-# records needed in database:
-# barcode value
-# barcode found
-# barcode location
-# barcode type
-# numbercodes
+# Records needed in database:
+# Barcode value/message -> the text stored in the barcode
+# Barcode found -> a check if a barcode was found in the image
+# Barcode location -> coordinates of the corners of the bar code, so that it can be displayed on the image
+# Barcode type -> QR, 2D Bar etc.
+# Number of codes -> number of barcodes in an image
 
-#first strings for message and type as waveforms
-record(waveform, "$(P)$(R)BarcodeMessage")
+##################################################################
+# First stringin/stringout records to store the barcode message
+# and the barcode type.
+##################################################################
+
+record(stringout, "$(P)$(R)BarcodeMessage")
 {
 	field(PINI, "YES")
 	field(DTYP, "asynOctetWrite")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
-	field(FTLV, "CHAR")
-	field(NELM, "256")
-	field(VAL, "No Message Found")
+	field(VAL, "$(BARCODE_MESSAGE)")
+	info(autosaveFields, "VAL")
 }
 
-record(waveform, "$(P)$(R)BarcodeMessage_RBV"){
+record(stringin, "$(P)$(R)BarcodeMessage_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
-        field(FTVL, "CHAR")
-        field(NELM, "256")
+        field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)BarcodeType")
+record(stringout, "$(P)$(R)BarcodeType")
 {
 	field(PINI, "YES")
 	field(DTYP, "asynOctetWrite")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
-	field(FTVL, "CHAR")
-	field(NELM, "256")
-	field(VAL, "None")
+	field(VAL, "$(BARCODE_TYPE)")
+	info(autosaveFields, "VAL")
 }
 
-record(waveform, "$(P)$(R)BarcodeType_RBV")
+record(stringin, "$(P)$(R)BarcodeType_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
-        field(FTVL, "CHAR")
-        field(NELM, "256")
+        field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
-#binary check if barcode was found
+######################################################################
+# Binary check if barcode was found
+######################################################################
+
 record(bo, "$(P)$(R)BarcodeFound")
 {
         field(DTYP, "asynInt32")
@@ -73,7 +76,10 @@ record(bi, "$(P)$(R)BarcodeFound_RBV")
 	field(SCAN, "I/O Intr")
 }
 
-#number of codes
+######################################################################
+# Number of codes in the image
+######################################################################
+
 record(ao, "$(P)$(R)NumberCodes")
 {
 	field(PINI, "YES")
@@ -89,7 +95,10 @@ record(ai, "$(P)$(R)NumberCodes_RBV")
 	field(SCAN, "I/O Intr")
 }	
 
-#cooridnates of corners of discovered barcodes
+#####################################################################
+# X-Values of the cooridnates of corners of discovered barcodes
+#####################################################################
+
 record(ao, "$(P)$(R)UpperRightX")
 {
 	field(DTYP, "asynInt32")
@@ -146,7 +155,10 @@ record(ai, "$(P)$(R)LowerRightX_RBV")
 	field(SCAN, "I/O Intr")
 }
 
-#cooridnates of corners of discovered barcodes
+#########################################################################
+# Y-Values of the cooridnates of corners of discovered barcodes
+#########################################################################
+
 record(ao, "$(P)$(R)UpperRightY")
 {
 	field(DTYP, "asynInt32")

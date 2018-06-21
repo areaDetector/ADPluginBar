@@ -30,8 +30,8 @@ using namespace zbar;
 
 
 //Here I will define all of the output data types once the database is written
-#define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //waveform
-#define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //waveform
+#define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //asynOctet
+#define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //asynOctet
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
 #define NDPluginBarBarcodeFoundString "BARCODE_FOUND" //asynInt32
 #define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
