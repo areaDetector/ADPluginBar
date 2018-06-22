@@ -25,7 +25,7 @@ using namespace zbar;
 
 //version numbers
 #define BAR_VERSION      0
-#define BAR_REVISION     2
+#define BAR_REVISION     3
 #define BAR_MODIFICATION 1
 
 
@@ -33,7 +33,6 @@ using namespace zbar;
 #define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //asynOctet
 #define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //asynOctet
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
-#define NDPluginBarBarcodeFoundString "BARCODE_FOUND" //asynInt32
 #define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
 #define NDPluginBarUpperRightXString "UPPER_RIGHT_X" //asynInt32
 #define NDPluginBarLowerLeftXString "LOWER_LEFT_X" //asynInt32
@@ -56,8 +55,7 @@ class NDPluginBar : public NDPluginDriver {
 		NDPluginBar(const char *portName, int queueSize, int blockingCallbacks,
 			const char* NDArrayPort, int NDArrayAddr, int maxBuffers,
 			size_t maxMemory, int priority, int stackSize);
-		//void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
-		//Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
+
 		void processCallbacks(NDArray *pArray);
 
 	protected:
@@ -68,9 +66,6 @@ class NDPluginBar : public NDPluginDriver {
 
 		//type of bar code i.e. QR, BAR
 		int NDPluginBarBarcodeType;
-
-		//if there is a bar code found
-		int NDPluginBarBarcodeFound;
 
 		//number of codes found
 		int NDPluginBarNumberCodes;
@@ -100,7 +95,7 @@ class NDPluginBar : public NDPluginDriver {
 		int NDPluginBarLowerRightY;
 	private:
 		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
-
+		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
 
 };
 
