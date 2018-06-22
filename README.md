@@ -105,3 +105,20 @@ To use ADPluginBar with CSS, place the provided .opi screen into your CSS setup,
 appropriately. It requires a mono image, so set your camera to mono, and enable the plugin.
 When a barcode is detected, the plugin will populate the appropriate PVs, and display an image with 
 a bounding box representing where in the image it identified a barcode.
+
+### Process Variables Supported
+
+PV		|  Comment
+----------------|---------------
+BarcodeMessage  |  The message contained within the decoded barcode
+BarcodeType     |  The type of the decoded barcode i.e. CODE-128, QR-Code etc.
+NumberCodes     |  Live count of the number of decoded bar codes
+UpperLeftX	|  X-coordinate of the upper left corner of the detected barcode
+UpperRightX	|  X-coordinate of the upper right corner of the detected barcode
+LowerLeftX	|  X-coordinate of the lower left corner of the detected barcode
+LowerRightX	|  X-coordinate of the lower right corner of the detected barcode
+UpperLeftY	|  Y-coordinate of the upper left corner of the detected barcode
+UpperRightY	|  Y-coordinate of the upper right corner of the detected barcode
+LowerLeftY	|  Y-coordinate of the lower left corner of the detected barcode
+LowerRightY	|  Y-coordinate of the lower right corner of the detected barcode
+
