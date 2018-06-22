@@ -122,28 +122,23 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		//push location data
 		for(int i = 0; i< symbol->get_location_size(); i++){
 			barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
-			/*
-			switch(i){
-				case 0:
-					setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
-					setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
-					break;
-				case 1:
-					setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
-					setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
-					break;
-				case 2:
-					setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
-					setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
-					break;
-				case 3:
-					setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
-					setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
-					break;
-				default:
-					break;
+
+			if(i==0){
+				setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
 			}
-			*/
+			else if(i==1){
+				setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
+			}
+			else if(i==2){
+				setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
+			}
+			else if(i==3){
+				setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
+			}
 		}
 		codes_in_image.push_back(barQR);
 	}
@@ -169,7 +164,7 @@ void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 		}
 	}
 	//disables the plugin so that it doesn't lock up and drop frames
-	setIntegerParam(NDPluginDriverEnableCallbacks, 0);
+	//setIntegerParam(NDPluginDriverEnableCallbacks, 0);
 	imshow("Barcode found", im);
 	waitKey(0);
 }
@@ -235,7 +230,7 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 
 	//decode the bar codes in the image if any
 	decode_bar_code(img, codes_in_image);
-	show_bar_codes(img, codes_in_image);
+	//show_bar_codes(img, codes_in_image);
 
 	this->lock();
 
