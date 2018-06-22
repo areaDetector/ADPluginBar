@@ -24,9 +24,9 @@ using namespace zbar;
 
 
 //version numbers
-#define BAR_VERSION      0
-#define BAR_REVISION     3
-#define BAR_MODIFICATION 1
+#define BAR_VERSION      1
+#define BAR_REVISION     0
+#define BAR_MODIFICATION 0
 
 
 //Here I will define all of the output data types once the database is written
