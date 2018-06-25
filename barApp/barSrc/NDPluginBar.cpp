@@ -113,7 +113,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		barQR.data = symbol->get_data();
 
 		bool check = check_past_code(barQR.data);
-		if(bool == true){
+		if(check == true){
 			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
 		}
 		else{
