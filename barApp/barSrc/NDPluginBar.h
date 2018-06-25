@@ -96,6 +96,7 @@ class NDPluginBar : public NDPluginDriver {
 	private:
 		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
 		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
+		bool check_past_code(string data);
 
 };
 

@@ -71,6 +71,13 @@ static const char *driverName="NDPluginBar";
 	NDBayer_BGGR    BG
 */
 
+bool NDPluginBar::check_past_code(string data){
+	string past_code = "";
+	getStringParam(NDPluginBarBarcodeMessage, &past_code);
+	if(data == past_code) return true;
+	else return false;
+}
+
 /*
  * Function that does the barcode decoding. It is passed an image and a vector
  * that will store all of the codes found in the image. A zbar scanner is initialized.
@@ -105,42 +112,47 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		barQR.type = symbol->get_type_name();
 		barQR.data = symbol->get_data();
 
-		//print information
-		cout << "Type: " << barQR.type << endl;
-		cout << "Data: " << barQR.data << endl << endl;
-
-		//set PVs
-		setStringParam(NDPluginBarBarcodeType, barQR.type);
-		setStringParam(NDPluginBarBarcodeMessage, barQR.data);
-
-		//iterate the number of discovered codes
-		int num_codes = 0;
-		getIntegerParam(NDPluginBarNumberCodes, &num_codes);
-		num_codes = num_codes+1;
-		setIntegerParam(NDPluginBarNumberCodes, num_codes);
-
-		//push location data
-		for(int i = 0; i< symbol->get_location_size(); i++){
-			barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
-
-			if(i==0){
-				setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
-				setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
-			}
-			else if(i==1){
-				setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
-				setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
-			}
-			else if(i==2){
-				setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
-				setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
-			}
-			else if(i==3){
-				setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
-				setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
-			}
+		bool check = check_past_code(barQR.data);
+		if(bool == true){
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
 		}
-		codes_in_image.push_back(barQR);
+		else{
+			//print information
+			cout << "Type: " << barQR.type << endl;
+			cout << "Data: " << barQR.data << endl << endl;
+			//set PVs
+			setStringParam(NDPluginBarBarcodeType, barQR.type);
+			setStringParam(NDPluginBarBarcodeMessage, barQR.data);
+
+			//iterate the number of discovered codes
+			int num_codes = 0;
+			getIntegerParam(NDPluginBarNumberCodes, &num_codes);
+			num_codes = num_codes+1;
+			setIntegerParam(NDPluginBarNumberCodes, num_codes);
+
+			//push location data
+			for(int i = 0; i< symbol->get_location_size(); i++){
+				barQR.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
+
+				if(i==0){
+					setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
+					setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
+				}
+				else if(i==1){
+					setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
+					setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
+				}
+				else if(i==2){
+					setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
+					setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
+				}
+				else if(i==3){
+					setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
+					setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
+				}
+			}
+			codes_in_image.push_back(barQR);
+		}
 	}
 }
 
