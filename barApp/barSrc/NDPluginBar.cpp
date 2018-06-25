@@ -71,6 +71,12 @@ static const char *driverName="NDPluginBar";
 	NDBayer_BGGR    BG
 */
 
+/*
+ * Function responsible for checking if discovered bar code is a repeat
+ * 
+ * @params: data -> data in discovered bar code
+ * @return: true if data is the same, false otherwise
+ */
 bool NDPluginBar::check_past_code(string data){
 	string past_code;
 	getStringParam(NDPluginBarBarcodeMessage, past_code);
