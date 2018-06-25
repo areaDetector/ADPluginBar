@@ -72,8 +72,8 @@ static const char *driverName="NDPluginBar";
 */
 
 bool NDPluginBar::check_past_code(string data){
-	string past_code = "";
-	getStringParam(NDPluginBarBarcodeMessage, &past_code);
+	string past_code;
+	getStringParam(NDPluginBarBarcodeMessage, past_code);
 	if(data == past_code) return true;
 	else return false;
 }
