@@ -22,4 +22,6 @@ Release Notes
 
 R1-0 (22-June-2018)
 ----
-* Original release.
+* Original release. Some issues that can be resolved with future releases:
+> Only mono images supported
+> stringin record used for barcode message, so limit of 40 characters currently
