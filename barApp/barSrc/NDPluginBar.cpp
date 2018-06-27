@@ -38,6 +38,7 @@ static const char *driverName="NDPluginBar";
 static int previously_detected = 0;
 
 
+
 /*
  * Function responsible for checking if discovered bar code is a repeat
  *
@@ -77,25 +78,36 @@ Mat NDPluginBar::fix_inverted(Mat &im){
 
 
 
-void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol){
+/*
+ * Function that is used simply to offload the process of setting the PV values
+ * of the detected corners. It takes the current detected bar code, assignes the values of
+ * the corners to the struct, and then, if it is the first detected code, sets PV vals
+ *
+ * @params: discovered -> struct contatining discovered bar or QR code
+ * @params: symbol -> current discovered code
+ * @params: update_corners -> flag to see if it is the first detected code
+ * @return: void
+ */
+void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners){
 	for(int i = 0; i< symbol->get_location_size(); i++){
 		discovered.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
-
-		if(i==0){
-			setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
-			setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
-		}
-		else if(i==1){
-			setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
-			setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
-		}
-		else if(i==2){
-			setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
-			setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
-		}
-		else if(i==3){
-			setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
-			setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
+		if(update_corners==1){
+			if(i==0){
+				setIntegerParam(NDPluginBarUpperLeftX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarUpperLeftY, symbol->get_location_y(i));
+			}
+			else if(i==1){
+				setIntegerParam(NDPluginBarUpperRightX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarUpperRightY, symbol->get_location_y(i));
+			}
+			else if(i==2){
+				setIntegerParam(NDPluginBarLowerLeftX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarLowerLeftY, symbol->get_location_y(i));
+			}
+			else if(i==3){
+				setIntegerParam(NDPluginBarLowerRightX, symbol->get_location_x(i));
+				setIntegerParam(NDPluginBarLowerRightY, symbol->get_location_y(i));
+			}
 		}
 	}
 }
@@ -116,8 +128,6 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
  */
 void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
-	//for debug purposes
-	//asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "Barcode reader has begun decoding process\n");
 	static const char* functionName = "decode_bar_code";
 
 	//initialize the image and the scanner object
@@ -128,6 +138,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 	//scan the image with the zbar scanner
 	zbarScanner.scan(image);
 
+	//arrays of barcode messages and types
 	int messages[5];
 	messages[0] = NDPluginBarBarcodeMessage1;
 	messages[1] = NDPluginBarBarcodeMessage2;
@@ -141,6 +152,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 	types[3] = NDPluginBarBarcodeType4;
 	types[4] = NDPluginBarBarcodeType5;
 
+	//counter for number of codes in current image
 	int counter = 0;
 
 	for(Image::SymbolIterator symbol = image.symbol_begin(); symbol!=image.symbol_end();++symbol){
@@ -149,6 +161,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 		bar_QR_code barQR;
 		barQR.type = symbol->get_type_name();
 		barQR.data = symbol->get_data();
+
 		//check to see if code has been detected already
 		bool check = check_past_code(barQR.data);
 		if(check == true){
@@ -175,7 +188,10 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 			//only the first code has its coordinates saved
 			if(counter == 0){
 				//push location data
-				push_corners(barQR, symbol);
+				push_corners(barQR, symbol, 1);
+			}
+			else{
+				push_corners(barQR, symbol, 0);
 			}
 			codes_in_image.push_back(barQR);
 		}
@@ -188,6 +204,8 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 /* Function that uses opencv methods with the locations of the discovered codes to place
  * bounding boxes around the areas of the image that contain barcodes. This is
  * so the user can confirm that the correct area of the image was discovered
+ *
+ * TODO: Change this function to pipe coordinate information back into NDArray
  *
  * @params: im -> image in which the barcode was discovered
  * @params: codes_in_image -> all barcodes detected in the image
@@ -204,8 +222,6 @@ void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 			line(im, outside[j], outside[(j+1)%n], Scalar(255,255,255),3);
 		}
 	}
-	//disables the plugin so that it doesn't lock up and drop frames
-	//setIntegerParam(NDPluginDriverEnableCallbacks, 0);
 	imshow("Barcode found", im);
 	waitKey(0);
 }
@@ -217,7 +233,7 @@ void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
  * 1) Check if the NDArray is mono, as zbar only accepts mono/grayscale images
  * 2) Convert the NDArray recieved into an OpenCV Mat object
  * 3) Decode barcode method is called
- * 4) Show barcode method is called
+ * 4) (Currently Disabled) Show barcode method is called
  *
  * @params: pArray -> NDArray recieved by the plugin from the camera
  * @return: void
@@ -307,7 +323,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 
 	char versionString[25];
 
-	//basic barcode parameters
+	//basic barcode parameters 1-5
 	createParam(NDPluginBarBarcodeMessage1String, asynParamOctet, &NDPluginBarBarcodeMessage1);
 	createParam(NDPluginBarBarcodeType1String, asynParamOctet, &NDPluginBarBarcodeType1);
 	createParam(NDPluginBarBarcodeMessage2String, asynParamOctet, &NDPluginBarBarcodeMessage2);
