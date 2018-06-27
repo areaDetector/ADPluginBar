@@ -20,6 +20,17 @@ files respectively, in the configure/ directory of the appropriate release of th
 Release Notes
 =============
 
+R1-1 (27-June-2018)
+----
+* Several key features added and bugs fixed:
+	* Support added for reading up to 5 codes in one image (Corner data stored in PV for first code)
+	* Support added for reading inverted bar codes i.e. white code on black background
+	* Fixed issue where number of barcodes would continue to increment when seeing the same bar code
+	* Fixed issuse where seeing the same barcode would cause an infinite loop of asyn messages in the IOC shell
+* Future plans:
+	* Add ability to save image file with detected barcodes marked.
+	* Add ability to pipe information into an NDArray and display it in CSS
+
 R1-0 (22-June-2018)
 ----
 * Original release. Some issues that can be resolved with future releases:
