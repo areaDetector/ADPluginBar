@@ -10,7 +10,6 @@
 #ifndef NDPluginBar_H
 #define NDPluginBar_H
 
-
 //two includes
 #include <opencv2/opencv.hpp>
 #include <zbar.h>
@@ -22,16 +21,24 @@ using namespace zbar;
 //include base plugin driver
 #include "NDPluginDriver.h"
 
-
 //version numbers
 #define BAR_VERSION      1
-#define BAR_REVISION     0
+#define BAR_REVISION     1
 #define BAR_MODIFICATION 0
 
 
+
 //Here I will define all of the output data types once the database is written
-#define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //asynOctet
-#define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //asynOctet
+#define NDPluginBarBarcodeMessage1String "BARCODE_MESSAGE1" //asynOctet
+#define NDPluginBarBarcodeType1String "BARCODE_TYPE1" //asynOctet
+#define NDPluginBarBarcodeMessage2String "BARCODE_MESSAGE2" //asynOctet
+#define NDPluginBarBarcodeType2String "BARCODE_TYPE2" //asynOctet
+#define NDPluginBarBarcodeMessage3String "BARCODE_MESSAGE3" //asynOctet
+#define NDPluginBarBarcodeType3String "BARCODE_TYPE3" //asynOctet
+#define NDPluginBarBarcodeMessage4String "BARCODE_MESSAGE4" //asynOctet
+#define NDPluginBarBarcodeType4String "BARCODE_TYPE4" //asynOctet
+#define NDPluginBarBarcodeMessage5String "BARCODE_MESSAGE5" //asynOctet
+#define NDPluginBarBarcodeType5String "BARCODE_TYPE5" //asynOctet
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
 #define NDPluginBarInvertedBarcodeString "INVERTED_CODE" //asynInt32
 #define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
@@ -43,12 +50,16 @@ using namespace zbar;
 #define NDPluginBarLowerLeftYString "LOWER_LEFT_Y" //asynInt32
 #define NDPluginBarLowerRightYString "LOWER_RIGHT_Y" //asynInt32
 
+
+
 //structure that contains information about the bar/QR code
 typedef struct{
 	string type;
 	string data;
 	vector <Point> position;
 }bar_QR_code;
+
+
 
 //class that does barcode readings
 class NDPluginBar : public NDPluginDriver {
@@ -61,12 +72,23 @@ class NDPluginBar : public NDPluginDriver {
 
 	protected:
 
-		//in this section, once I define the database values, I will have to define them here
-		//message contained in bar code
-		int NDPluginBarBarcodeMessage;
+		//in this section i define the coords of database vals
 
-		//type of bar code i.e. QR, BAR
-		int NDPluginBarBarcodeType;
+		//message contained in bar code and its type
+		int NDPluginBarBarcodeMessage1;
+		int NDPluginBarBarcodeType1;
+
+		int NDPluginBarBarcodeMessage2;
+		int NDPluginBarBarcodeType2;
+
+		int NDPluginBarBarcodeMessage3;
+		int NDPluginBarBarcodeType3;
+
+		int NDPluginBarBarcodeMessage4;
+		int NDPluginBarBarcodeType4;
+
+		int NDPluginBarBarcodeMessage5;
+		int NDPluginBarBarcodeType5;
 
 		//number of codes found
 		int NDPluginBarNumberCodes;
@@ -97,11 +119,23 @@ class NDPluginBar : public NDPluginDriver {
 
 		//lower right pixel of found bar code
 		int NDPluginBarLowerRightY;
+
 	private:
+
+		//function that does the decoding
 		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
+
+		//function that displays detected bar codes
 		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
+
+		//function that checks for barcode repetition
 		bool check_past_code(string data);
+
+		//function that allows for reading inverted barcodes
 		Mat fix_inverted(Mat &im);
+
+		//function that pushes barcode coordinate data to PVs
+		void push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
 
 };
 

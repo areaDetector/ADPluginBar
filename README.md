@@ -60,11 +60,14 @@ set_requestfile_path("$(ADPLUGINBAR)/barApp/Db")
 
 This will add ADPluginBar to the boot operation when the ioc is run.
 
+Optionally:
 In the same directory, check the commonPlugin_settings.req file to make sure the following line is uncommented:
 
 ```
 file "NDBar_settings.req",         P=$(P),  R=Bar1:
 ```
+This has to do with the EPICS autosave feature, and currently is buggy. This is not required for Plugin operation and can
+be omitted.
 
 Next, go back into your area detector base directory, and enter the configure directory.
 Here, in the CONFIG_SITE.local.$(YOUR HOST) file, ensure that the following is defined:
@@ -101,7 +104,7 @@ You have now installed the ADPluginBar Plugin.
 
 ### Usage
 
-To use ADPluginBar with CSS, place the provided .opi screen into your CSS setup, and link to it
+To use ADPluginBar with CSS, place the provided .opi screens into your CSS setup, and link to it
 appropriately. It requires a mono image, so set your camera to mono, and enable the plugin.
 When a barcode is detected, the plugin will populate the appropriate PVs, and display an image with 
 a bounding box representing where in the image it identified a barcode.
@@ -110,15 +113,18 @@ a bounding box representing where in the image it identified a barcode.
 
 PV		|  Comment
 ----------------|---------------
-BarcodeMessage  |  The message contained within the decoded barcode
-BarcodeType     |  The type of the decoded barcode i.e. CODE-128, QR-Code etc.
+BarcodeMessage(1-5)  |  The message contained within the decoded barcode
+BarcodeType(1-5)     |  The type of the decoded barcode i.e. CODE-128, QR-Code etc.
 NumberCodes     |  Live count of the number of decoded bar codes
 UpperLeftX	|  X-coordinate of the upper left corner of the detected barcode
 UpperRightX	|  X-coordinate of the upper right corner of the detected barcode
 LowerLeftX	|  X-coordinate of the lower left corner of the detected barcode
-LowerRightX	|  X-coordinate of the lower right corner of the detected barcode
+LowerRightX	|  X-coordinate of the lower right corner of the detected barcode 
 UpperLeftY	|  Y-coordinate of the upper left corner of the detected barcode
 UpperRightY	|  Y-coordinate of the upper right corner of the detected barcode
 LowerLeftY	|  Y-coordinate of the lower left corner of the detected barcode
 LowerRightY	|  Y-coordinate of the lower right corner of the detected barcode
 
+
+Note: Only the corners of the first detected barcode are stored in PVs. However,
+if the image is reset, and different barcodes are found, these will be replaced.
