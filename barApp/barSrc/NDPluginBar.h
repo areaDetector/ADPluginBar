@@ -30,8 +30,16 @@ using namespace zbar;
 
 
 //Here I will define all of the output data types once the database is written
-#define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //asynOctet
-#define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //asynOctet
+#define NDPluginBarBarcodeMessage1String "BARCODE_MESSAGE1" //asynOctet
+#define NDPluginBarBarcodeType1String "BARCODE_TYPE1" //asynOctet
+#define NDPluginBarBarcodeMessage2String "BARCODE_MESSAGE2" //asynOctet
+#define NDPluginBarBarcodeType2String "BARCODE_TYPE2" //asynOctet
+#define NDPluginBarBarcodeMessage3String "BARCODE_MESSAGE3" //asynOctet
+#define NDPluginBarBarcodeType3String "BARCODE_TYPE3" //asynOctet
+#define NDPluginBarBarcodeMessage4String "BARCODE_MESSAGE4" //asynOctet
+#define NDPluginBarBarcodeType4String "BARCODE_TYPE4" //asynOctet
+#define NDPluginBarBarcodeMessage5String "BARCODE_MESSAGE5" //asynOctet
+#define NDPluginBarBarcodeType5String "BARCODE_TYPE5" //asynOctet
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
 #define NDPluginBarInvertedBarcodeString "INVERTED_CODE" //asynInt32
 #define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
@@ -62,11 +70,21 @@ class NDPluginBar : public NDPluginDriver {
 	protected:
 
 		//in this section, once I define the database values, I will have to define them here
-		//message contained in bar code
-		int NDPluginBarBarcodeMessage;
+		//message contained in bar code and its type
+		int NDPluginBarBarcodeMessage1;
+		int NDPluginBarBarcodeType1;
 
-		//type of bar code i.e. QR, BAR
-		int NDPluginBarBarcodeType;
+		int NDPluginBarBarcodeMessage2;
+		int NDPluginBarBarcodeType2;
+
+		int NDPluginBarBarcodeMessage3;
+		int NDPluginBarBarcodeType3;
+
+		int NDPluginBarBarcodeMessage4;
+		int NDPluginBarBarcodeType4;
+
+		int NDPluginBarBarcodeMessage5;
+		int NDPluginBarBarcodeType5;
 
 		//number of codes found
 		int NDPluginBarNumberCodes;
@@ -102,6 +120,7 @@ class NDPluginBar : public NDPluginDriver {
 		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
 		bool check_past_code(string data);
 		Mat fix_inverted(Mat &im);
+		void push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol);
 
 };
 
