@@ -12,22 +12,84 @@ include "NDPluginBase.template"
 # Barcode type -> QR, 2D Bar etc.
 # Number of codes -> number of barcodes in an image
 
+# Up to 5 barcodes at once will be supported
+
 ##################################################################
 # First stringin/stringout records to store the barcode message
 # and the barcode type.
 ##################################################################
 
-record(stringin, "$(P)$(R)BarcodeMessage_RBV"){
+record(stringin, "$(P)$(R)BarcodeMessage1_RBV"){
 	field(DTYP, "asynOctetRead")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE1")
         field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
-record(stringin, "$(P)$(R)BarcodeType_RBV")
+record(stringin, "$(P)$(R)BarcodeType1_RBV")
 {
 	field(DTYP, "asynOctetRead")
-	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE1")
+        field(VAL, "None")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeMessage2_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE2")
+        field(VAL, "No Barcode Found")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeType2_RBV")
+{
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE2")
+        field(VAL, "None")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeMessage3_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE3")
+        field(VAL, "No Barcode Found")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeType3_RBV")
+{
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE3")
+        field(VAL, "None")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeMessage4_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE4")
+        field(VAL, "No Barcode Found")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeType4_RBV")
+{
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE4")
+        field(VAL, "None")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeMessage5_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE5")
+        field(VAL, "No Barcode Found")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)BarcodeType5_RBV")
+{
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE5")
         field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
