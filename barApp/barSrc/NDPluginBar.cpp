@@ -36,44 +36,9 @@ using namespace cv;
 using namespace zbar;
 static const char *driverName="NDPluginBar";
 
-/** Conversions between NDArray Data types and OpenCV images
-	NDInt8,     Signed 8-bit integer
-	NDUInt8,    Unsigned 8-bit integer
-	NDInt16,    Signed 16-bit integer
-	NDUInt16,   Unsigned 16-bit integer
-	NDInt32,    Signed 32-bit integer
-	NDUInt32,   Unsigned 32-bit integer
-	NDFloat32,  32-bit float
-	NDFloat64   64-bit float
-	NDColorModeMono,    Monochromatic image
-	NDColorModeBayer,   Bayer pattern image, 1 value per pixel but with color filter on detector
-	NDColorModeRGB1,    RGB image with pixel color interleave, data array is [3, NX, NY]
-	NDColorModeRGB2,    RGB image with row color interleave, data array is [NX, 3, NY]
-	NDColorModeRGB3,    RGB image with plane color interleave, data array is [NX, NY, 3]
-	NDColorModeYUV444,  YUV image, 3 bytes encodes 1 RGB pixel
-	NDColorModeYUV422,  YUV image, 4 bytes encodes 2 RGB pixel
-	NDColorModeYUV411   YUV image, 6 bytes encodes 4 RGB pixels
-	NDArray         OpenCV
-	=========       ==========
-	NDInt8          CV_8S
-	NDUInt8         CV_8U
-	NDInt16         CV_16S
-	NDUInt16        CV_16U
-	NDInt32         CV_32S
-	NDUInt32        CV_32U
-	NDFloat32       CV_32F
-	NDFloat64       CV_64F
-	ND_BayerPatern  OpenCV
-	==============  ======
-	NDBayer_RGGB    RG
-	NDBayer_GBRG    GB
-	NDBayer_GRGB    GR
-	NDBayer_BGGR    BG
-*/
-
 /*
  * Function responsible for checking if discovered bar code is a repeat
- * 
+ *
  * @params: data -> data in discovered bar code
  * @return: true if data is the same, false otherwise
  */
@@ -82,6 +47,20 @@ bool NDPluginBar::check_past_code(string data){
 	getStringParam(NDPluginBarBarcodeMessage, past_code);
 	if(data == past_code) return true;
 	else return false;
+}
+
+/*
+ * Function used to use a form of thresholding to reverse the coloration of a bar code
+ * or QR code that is in the white on black format rather than the standard black on white
+ *
+ * @params: im -> image containing inverse QR code
+ * @return: inverted image
+ */
+Mat NDPluginBar::fix_inverted(Mat &im){
+	Mat inverted(255-im);
+	//imshow("temp", inverted);
+	//waitKey(0);
+	return inverted;
 }
 
 /*
@@ -99,7 +78,7 @@ bool NDPluginBar::check_past_code(string data){
 void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
 	//for debug purposes
-	asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "Barcode reader has begun decoding process\n");
+	//asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "Barcode reader has begun decoding process\n");
 	static const char* functionName = "decode_bar_code";
 
 	//initialize the image and the scanner object
@@ -246,9 +225,19 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	outData = (unsigned char *)img.data;
 	memcpy(outData, inData, arrayInfo.nElements * sizeof(unsigned char));
 
-	//decode the bar codes in the image if any
-	decode_bar_code(img, codes_in_image);
-	//show_bar_codes(img, codes_in_image);
+	//check to see if we need to invert barcode
+	int inverted_code;
+	getIntegerParam(NDPluginBarInvertedBarcode, &inverted_code);
+
+	if(inverted_code == 1){
+		Mat temp = fix_inverted(img);
+		decode_bar_code(temp, codes_in_image);
+	}
+	else{
+		//decode the bar codes in the image if any
+		decode_bar_code(img, codes_in_image);
+		//show_bar_codes(img, codes_in_image);
+	}
 
 	this->lock();
 
@@ -279,6 +268,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarBarcodeMessageString, asynParamOctet, &NDPluginBarBarcodeMessage);
 	createParam(NDPluginBarBarcodeTypeString, asynParamOctet, &NDPluginBarBarcodeType);
 	createParam(NDPluginBarNumberCodesString, asynParamInt32, &NDPluginBarNumberCodes);
+	createParam(NDPluginBarInvertedBarcodeString, asynParamInt32, &NDPluginBarInvertedBarcode);
 
 	//x coordinates
 	createParam(NDPluginBarUpperLeftXString, asynParamInt32, &NDPluginBarUpperLeftX);

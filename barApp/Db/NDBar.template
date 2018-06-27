@@ -50,7 +50,32 @@ record(ai, "$(P)$(R)NumberCodes_RBV")
 	field(DTYP, "asynInt32")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
 	field(SCAN, "I/O Intr")
-}	
+}
+
+#####################################################################
+# Inverted i.e. white on black
+#####################################################################
+
+record(bo, "$(P)$(R)InvertedBarcode")
+{
+	field(PINI, "YES")
+	field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))INVERTED_CODE")
+	field(ZNAM, "Standard")
+	field(ONAM, "Inverted")
+	field(VAL, "$(Standard=0)")
+}
+
+record(bi, "$(P)$(R)InvertedBarcode_RBV")
+{
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
+	field(ZNAM, "Standard")
+	field(ONAM, "Inverted")
+	field(ZSV, "NO_ALARM")
+	field(OSV, "MINOR")
+	field(SCAN, "I/O Intr")
+}
 
 #####################################################################
 # X-Values of the cooridnates of corners of discovered barcodes

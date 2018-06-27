@@ -33,6 +33,7 @@ using namespace zbar;
 #define NDPluginBarBarcodeMessageString "BARCODE_MESSAGE" //asynOctet
 #define NDPluginBarBarcodeTypeString "BARCODE_TYPE" //asynOctet
 #define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
+#define NDPluginBarInvertedBarcodeString "INVERTED_CODE" //asynInt32
 #define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
 #define NDPluginBarUpperRightXString "UPPER_RIGHT_X" //asynInt32
 #define NDPluginBarLowerLeftXString "LOWER_LEFT_X" //asynInt32
@@ -70,6 +71,9 @@ class NDPluginBar : public NDPluginDriver {
 		//number of codes found
 		int NDPluginBarNumberCodes;
 
+		//white on black/ black on white
+		int NDPluginBarInvertedBarcode;
+
 		//upper left pixel of found bar code
 		int NDPluginBarUpperLeftX;
 
@@ -97,6 +101,7 @@ class NDPluginBar : public NDPluginDriver {
 		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
 		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
 		bool check_past_code(string data);
+		Mat fix_inverted(Mat &im);
 
 };
 
