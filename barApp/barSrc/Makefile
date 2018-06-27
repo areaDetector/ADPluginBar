@@ -1,4 +1,4 @@
-#TODO: ADD ZBAR to compile
+#Author: Jakub Wlodek December 2017
 
 TOP=../..
 include $(TOP)/configure/CONFIG

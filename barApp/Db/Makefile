@@ -1,3 +1,5 @@
+#Author: Jakub Wlodek
+
 TOP=../..
 include $(TOP)/configure/CONFIG
 
