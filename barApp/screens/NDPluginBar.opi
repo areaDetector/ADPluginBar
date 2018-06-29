@@ -121,7 +121,7 @@ $(pv_value)</tooltip>
       <color red="0" green="0" blue="0" />
     </foreground_color>
     <gradient>false</gradient>
-    <height>364</height>
+    <height>412</height>
     <horizontal_fill>true</horizontal_fill>
     <line_color>
       <color red="0" green="0" blue="0" />
@@ -256,7 +256,7 @@ $(pv_value)</tooltip>
     <name>Text Update</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(P)$(R)BarcodeMessage_RBV</pv_name>
+    <pv_name>$(P)$(R)BarcodeMessage1_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -348,7 +348,7 @@ $(pv_value)</tooltip>
     <name>Text Update</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(P)$(R)BarcodeType_RBV</pv_name>
+    <pv_name>$(P)$(R)BarcodeType1_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4071,5 +4071,99 @@ $(pv_value)</tooltip>
     <wuid>45402fea:16441f346eb:-6588</wuid>
     <x>392</x>
     <y>173</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="OPEN_DISPLAY">
+        <path>NDPluginBar1_5.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+        </macros>
+        <mode>1</mode>
+        <description>NDPluginBar1-5</description>
+      </action>
+    </actions>
+    <actions_from_pv>false</actions_from_pv>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="115" green="223" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>6</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <label></label>
+    <name>Menu Button_5</name>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_down_arrow>false</show_down_arrow>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <widget_type>Menu Button</widget_type>
+    <width>100</width>
+    <wuid>563a3e58:1644d1293d6:-7907</wuid>
+    <x>614</x>
+    <y>414</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>2</horizontal_alignment>
+    <name>Label_35</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>View codes 1-5</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>140</width>
+    <wrap_words>false</wrap_words>
+    <wuid>563a3e58:1644d1293d6:-78ff</wuid>
+    <x>467</x>
+    <y>415</y>
   </widget>
 </display>
