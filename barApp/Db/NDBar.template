@@ -265,3 +265,13 @@ record(ai, "$(P)$(R)LowerRightY_RBV")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_Y")
 	field(SCAN, "I/O Intr")
 }
+
+# Experimental: Record containing image with detected barcodes
+
+record(waveform, "$(P)$(R)DetectedBarcodes"){
+    field(DTYP, "asyn$(TYPE)ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))DETECTED_BARCODES")
+    field(FTVL, "$(FTVL)")
+    field(NELM, "$(NELEMENTS)")
+	ield(SCAN, "I/O Intr")
+}

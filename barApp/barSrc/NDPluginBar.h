@@ -50,6 +50,9 @@ using namespace zbar;
 #define NDPluginBarLowerLeftYString "LOWER_LEFT_Y" //asynInt32
 #define NDPluginBarLowerRightYString "LOWER_RIGHT_Y" //asynInt32
 
+//EXPERIMENTAL
+#define NDPluginBarDecodedBarcodesString "DECODED_BARCODES" //asynGenericPointer
+
 
 
 //structure that contains information about the bar/QR code
@@ -120,13 +123,16 @@ class NDPluginBar : public NDPluginDriver {
 		//lower right pixel of found bar code
 		int NDPluginBarLowerRightY;
 
+		//EXPERIMENTAL
+		int NDPluginBarDecodedBarcodes;
+
 	private:
 
 		//function that does the decoding
 		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
 
 		//function that displays detected bar codes
-		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
+		Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
 
 		//function that checks for barcode repetition
 		bool check_past_code(string data);

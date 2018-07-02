@@ -211,7 +211,7 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
  * @params: codes_in_image -> all barcodes detected in the image
  * @return: void
 */
-void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
+Mat NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 	for(int i = 0; i<codes_in_image.size(); i++){
 		vector<Point> barPoints = codes_in_image[i].position;
 		vector<Point> outside;
@@ -222,8 +222,9 @@ void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 			line(im, outside[j], outside[(j+1)%n], Scalar(255,255,255),3);
 		}
 	}
-	imshow("Barcode found", im);
-	waitKey(0);
+	//imshow("Barcode found", im);
+	//waitKey(0);
+	return im;
 }
 
 
@@ -288,15 +289,27 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	int inverted_code;
 	getIntegerParam(NDPluginBarInvertedBarcode, &inverted_code);
 
+	Mat found_codes;
 	if(inverted_code == 1){
 		Mat temp = fix_inverted(img);
 		decode_bar_code(temp, codes_in_image);
+		found_codes = show_bar_codes(temp, codes_in_image);
 	}
 	else{
 		//decode the bar codes in the image if any
 		decode_bar_code(img, codes_in_image);
-		//show_bar_codes(img, codes_in_image);
+		found_codes = show_bar_codes(img, codes_in_image);
 	}
+	NDArray* pDetected = NULL;
+	NDDimension_t detected_dims[2];
+	pDetected->initDimension(&dcratch_dims[0], rowSize);
+	pDetected->initDimension(&dcratch_dims[1], numRows);
+	resultDat = (unsigned char*)found_codes.data;
+	pDetDat = (unsigned char*)pDetected->data;
+
+	memcpy(resultData, pDetDat, (rowSize*numRows)*sizeof(unsigned char));
+
+	doCallbacksGenericPointer(pDetected, NDPluginBarDetectedBarcodes, 0);
 
 	this->lock();
 
@@ -351,6 +364,9 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarUpperRightYString, asynParamInt32, &NDPluginBarUpperRightY);
 	createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
+
+	//EXPERIMENTAL: barcodes detected in image
+	createParam(NDPluginBarDetectedBarcodesString, asynParamGenericPointer, &NDPluginBarDetectedBarcodes);
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
