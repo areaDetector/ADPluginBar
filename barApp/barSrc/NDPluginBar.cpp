@@ -126,9 +126,11 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
  * @params: codes_in_image -> vector that stores all of the detected barcodes
  * @return: void
  */
-void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+bool NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
 	static const char* functionName = "decode_bar_code";
+
+	bool found = false;
 
 	//initialize the image and the scanner object
 	ImageScanner zbarScanner;
@@ -194,9 +196,11 @@ void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 				push_corners(barQR, symbol, 0);
 			}
 			codes_in_image.push_back(barQR);
+			found = true;
 		}
 		counter++;
 	}
+	return found;
 }
 
 
@@ -290,26 +294,30 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	getIntegerParam(NDPluginBarInvertedBarcode, &inverted_code);
 
 	Mat found_codes;
+	bool found;
+
 	if(inverted_code == 1){
 		Mat temp = fix_inverted(img);
-		decode_bar_code(temp, codes_in_image);
-		found_codes = show_bar_codes(temp, codes_in_image);
+		found = decode_bar_code(temp, codes_in_image);
+		if(found) found_codes = show_bar_codes(temp, codes_in_image);
 	}
 	else{
 		//decode the bar codes in the image if any
-		decode_bar_code(img, codes_in_image);
-		found_codes = show_bar_codes(img, codes_in_image);
+		found = decode_bar_code(img, codes_in_image);
+		if(found) found_codes = show_bar_codes(img, codes_in_image);
 	}
-	NDArray* pDetected = NULL;
-	NDDimension_t detected_dims[2];
-	pDetected->initDimension(&dcratch_dims[0], rowSize);
-	pDetected->initDimension(&dcratch_dims[1], numRows);
-	resultDat = (unsigned char*)found_codes.data;
-	pDetDat = (unsigned char*)pDetected->data;
+	if(found){
+		NDArray* pDetected = NULL;
+		NDDimension_t detected_dims[2];
+		pDetected->initDimension(&dcratch_dims[0], rowSize);
+		pDetected->initDimension(&dcratch_dims[1], numRows);
+		resultDat = (unsigned char*)found_codes.data;
+		pDetDat = (unsigned char*)pDetected->data;
 
-	memcpy(resultData, pDetDat, (rowSize*numRows)*sizeof(unsigned char));
+		memcpy(resultData, pDetDat, (rowSize*numRows)*sizeof(unsigned char));
 
-	doCallbacksGenericPointer(pDetected, NDPluginBarDetectedBarcodes, 0);
+		doCallbacksGenericPointer(pDetected, NDPluginBarDetectedBarcodes, 0);
+	}
 
 	this->lock();
 
