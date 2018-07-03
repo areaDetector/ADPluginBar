@@ -3,6 +3,7 @@
  *
  * Header file for EPICS Bar/QR reader plugin
  * Author: Jakub Wlodek
+ * Co-author: Kazimier Gofron
  *
  * Created December 5, 2017
 */
