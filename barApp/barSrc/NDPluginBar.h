@@ -53,7 +53,15 @@ using namespace zbar;
 //EXPERIMENTAL
 #define NDPluginBarDecodedBarcodesString "DECODED_BARCODES" //asynGenericPointer
 
-
+//DATABASE
+#define NDPluginBarEnableBarcodeDatabaseString "ENABLE_DATABASE" //asynInt32
+#define NDPluginBarBarcodeDatabaseTypeString "DATABASE_TYPE" //asynInt32
+#define NDPluginBarBarcodeDatabaseNameString "DATABASE_NAME" //asynOctect
+#define NDPluginBarBarcodeTableNameString "TABLE_NAME" //asynOctet
+//MySQL
+#define NDPluginBarBarcodeSQLServerString "SQL_SERVER" //asynOctet
+#define NDPluginBarBarcodeSQLUserString "SQL_USER" //asynOctet
+#define NDPluginBarBarcodeSQLPassString "SQL_PASSWORD" //asynOctet
 
 //structure that contains information about the bar/QR code
 typedef struct{
@@ -101,30 +109,33 @@ class NDPluginBar : public NDPluginDriver {
 
 		//upper left pixel of found bar code
 		int NDPluginBarUpperLeftX;
-
-		//upper right pixel of found bar code
-		int NDPluginBarUpperRightX;
-
-		//lower left pixel of found bar code
-		int NDPluginBarLowerLeftX;
-
-		//lower right pixel of found bar code
-		int NDPluginBarLowerRightX;
-
-		//upper left pixel of found bar code
 		int NDPluginBarUpperLeftY;
 
 		//upper right pixel of found bar code
+		int NDPluginBarUpperRightX;
 		int NDPluginBarUpperRightY;
 
 		//lower left pixel of found bar code
+		int NDPluginBarLowerLeftX;
 		int NDPluginBarLowerLeftY;
 
 		//lower right pixel of found bar code
+		int NDPluginBarLowerRightX;
 		int NDPluginBarLowerRightY;
 
 		//EXPERIMENTAL
 		int NDPluginBarDecodedBarcodes;
+
+		//Databases
+		int NDPluginBarEnableBarcodeDatabase;
+		int NDPluginBarBarcodeDatabaseType;
+		int NDPluginBarBarcodeDatabaseName;
+		int NDPluginBarBarcodeTableName;
+
+		//MySQL
+		int NDPluginBarBarcodeSQLServer;
+		int NDPluginBarBarcodeSQLUser;
+		int NDPluginBarBarcodeSQLPass;
 
 	private:
 

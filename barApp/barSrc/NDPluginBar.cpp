@@ -24,6 +24,7 @@
 #include <iocsh.h>
 #include "NDArray.h"
 #include "NDPluginBar.h"
+#include "NDBarSQL.h"
 #include <epicsExport.h>
 
 //OpenCV is used for image manipulation, zbar for barcode detection
@@ -375,6 +376,17 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 
 	//EXPERIMENTAL: barcodes detected in image
 	createParam(NDPluginBarDetectedBarcodesString, asynParamGenericPointer, &NDPluginBarDetectedBarcodes);
+
+	//Database Common
+	createParam(NDPluginBarEnableBarcodeDatabaseString, asynParamInt32, &NDPluginBarEnableBarcodeDatabase);
+	createParam(NDPluginBarBarcodeDatabaseTypeString, asynParamInt32, &NDPluginBarBarcodeDatabaseType);
+	createParam(NDPluginBarBarcodeDatabaseNameString, asynParamOctet, &NDPluginBarBarcodeDatabaseName);
+	createParam(NDPluginBarBarcodeTableNameString, asynParamOctet, &NDPluginBarBarcodeTableName);
+
+	//MySQL
+	createParam(NDPluginBarBarcodeSQLServerString, asynParamOctet, &NDPluginBarBarcodeSQLServer);
+	createParam(NDPluginBarBarcodeSQLUserString, asynParamOctet, &NDPluginBarBarcodeSQLUser);
+	createParam(NDPluginBarBarcodeSQLPassStringm asynParamOctet, &NDPluginBarBarcodeSQLPass);
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
