@@ -328,6 +328,20 @@ record(stringin, "$(P)$(R)BarcodeSQLServer_RBV"){
 	field(SCAN, "I/O Intr")
 }
 
+record(stringout, "$(P)$(R)BarcodeSQLUser"){
+	field(PINI, "YES")
+	field(DTYP, "asynOctetWrite")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_USER")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)$(R)BarcodeSQLUser_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_USER")
+        field(VAL, "No User Selected")
+	field(SCAN, "I/O Intr")
+}
+
 record(stringout, "$(P)$(R)BarcodeSQLPass"){
 	field(PINI, "YES")
 	field(DTYP, "asynOctetWrite")
