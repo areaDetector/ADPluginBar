@@ -121,7 +121,7 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
  * @params: barQR -> detected barcode or QR code
  * @return: status -> -1 for failure, 0 for success
 */
-int NDPluginBar::push_to_db(bar_QR_code barQR){
+int NDPluginBar::push_to_db(bar_QR_code &barQR){
 	static const char* functionName = "push_to_db";
 	int database_type;
 	getIntegerParam(NDPluginBarBarcodeDatabaseType, &database_type);
@@ -149,7 +149,7 @@ int NDPluginBar::push_to_db(bar_QR_code barQR){
  * @params: barQR -> detected barcode or QR code
  * @return: status -> integer representing the status of the db write
 */
-int NDPluginBar::push_to_sql(bar_QR_code barQR){
+int NDPluginBar::push_to_sql(bar_QR_code &barQR){
 	static const char* functionName = "push_to_sql";
 	if(database_init==0){
 		try{
@@ -163,15 +163,15 @@ int NDPluginBar::push_to_sql(bar_QR_code barQR){
 			database_init = 1;
 		}
 		catch(...){
-			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error initializing the database connection\n" driverName, functionName);
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error initializing the database connection\n", driverName, functionName);
 			return -1;
 		}
 	}
 	try{
-		sqlAccessor->add_to_table(barQR.data, barQR.type)
+		sqlAccessor->add_to_table(barQR.data, barQR.type);
 	}
 	catch(...){
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error writing to the database\n" driverName, functionName);
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error writing to the database\n", driverName, functionName);
 		return -1;
 	}
 	return 0;
@@ -378,14 +378,14 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	if(found){
 		NDArray* pDetected = NULL;
 		NDDimension_t detected_dims[2];
-		pDetected->initDimension(&dcratch_dims[0], rowSize);
-		pDetected->initDimension(&dcratch_dims[1], numRows);
-		resultDat = (unsigned char*)found_codes.data;
-		pDetDat = (unsigned char*)pDetected->data;
+		pDetected->initDimension(&detected_dims[0], rowSize);
+		pDetected->initDimension(&detected_dims[1], numRows);
+		unsigned char* resultDat = (unsigned char*)found_codes.data;
+		unsigned char* pDetDat = (unsigned char*)pDetected->pData;
 
-		memcpy(resultData, pDetDat, (rowSize*numRows)*sizeof(unsigned char));
+		memcpy(resultDat, pDetDat, (rowSize*numRows)*sizeof(unsigned char));
 
-		doCallbacksGenericPointer(pDetected, NDPluginBarDetectedBarcodes, 0);
+		doCallbacksGenericPointer(pDetected, NDPluginBarDecodedBarcodes, 0);
 	}
 
 	this->lock();
@@ -443,7 +443,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
 
 	//EXPERIMENTAL: barcodes detected in image
-	createParam(NDPluginBarDetectedBarcodesString, asynParamGenericPointer, &NDPluginBarDetectedBarcodes);
+	createParam(NDPluginBarDecodedBarcodesString, asynParamGenericPointer, &NDPluginBarDecodedBarcodes);
 
 	//Database Common
 	createParam(NDPluginBarEnableBarcodeDatabaseString, asynParamInt32, &NDPluginBarEnableBarcodeDatabase);
@@ -454,7 +454,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	//MySQL
 	createParam(NDPluginBarBarcodeSQLServerString, asynParamOctet, &NDPluginBarBarcodeSQLServer);
 	createParam(NDPluginBarBarcodeSQLUserString, asynParamOctet, &NDPluginBarBarcodeSQLUser);
-	createParam(NDPluginBarBarcodeSQLPassStringm asynParamOctet, &NDPluginBarBarcodeSQLPass);
+	createParam(NDPluginBarBarcodeSQLPassString, asynParamOctet, &NDPluginBarBarcodeSQLPass);
 
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");

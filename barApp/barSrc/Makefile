@@ -13,13 +13,22 @@ ifeq (vxWorks,$(findstring vxWorks, $(T_A)))
 	CODE_CXXFLAGS=
 endif
 
+#MYSQL_INCLUDE := /usr/include/mysql
+#MYSQL_CONN_INCLUDE := /usr/include/mysqlcppconn
+
 DBD += NDPluginBar.dbd
 
 INC += NDPluginBar.h
+INC += NDBarSQL.h
 
 LIBRARY_IOC += NDPluginBar
 
 NDPluginBar_SRCS += NDPluginBar.cpp
+NDPluginBar_SRCS +=NDBarSQL.cpp
+
+#LIB_LIBS += -L/usr/lib/mysql
+LIB_SYS_LIBS += mysqlclient
+LIB_SYS_LIBS += mysqlcppconn
 
 #TODO: When compiling external opencv+zbar test, I needed to run:
 # g++ test.cpp $(pkg-config --libs opencv --cflags) $(pkg-config --libs zbar --cflags) -o check
@@ -31,6 +40,14 @@ endif
 ifdef OPENCV_LIB
 	NDPluginBar_DIR += $(OPENCV_LIB)
 endif
+
+#ifdef MYSQL_INCLUDE
+USR_INCLUDES += -I/usr/include/mysql
+#endif
+
+#idef MYSQL_CONN_INCLUDE
+USR_INCLUDES += -I/usr/include/mysqlcppconn
+#endif
 
 ifdef ZBAR_INCLUDE
 	USR_INCLUDES += -I$(ZBAR_INCLUDE)

@@ -143,7 +143,7 @@ class NDPluginBar : public NDPluginDriver {
 	private:
 
 		//function that does the decoding
-		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
+		bool decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
 
 		//function that displays detected bar codes
 		Mat show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
@@ -157,6 +157,9 @@ class NDPluginBar : public NDPluginDriver {
 		//function that pushes barcode coordinate data to PVs
 		void push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
 
+		int push_to_db(bar_QR_code &barQR);
+
+		int push_to_sql(bar_QR_code &barQR);
 };
 
 #endif

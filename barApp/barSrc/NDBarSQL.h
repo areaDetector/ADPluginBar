@@ -27,6 +27,8 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
+using namespace std;
+
 typedef struct{
 	string dbName;
 	string tableName;
@@ -44,11 +46,6 @@ class NDBarSQL {
 		NDBarSQL(string dbName, string tableName, string server, string username, string password);
 		~NDBarSQL();
 
-	protected:
-		//variables used by the SQL extention
-		BarSQLConnection* currentConnection;
-
- 	private:
 		//functions used by the SQL extention
 		//function that connects to the server
 		sql::Connection* connect_to_sql();
@@ -61,6 +58,12 @@ class NDBarSQL {
 
 		//function that disconnects from the MySQL server
 		void disconnect_from_sql();
+
+	protected:
+		//variables used by the SQL extention
+		BarSQLConnection* currentConnection;
+
+	private:
 };
 
 #endif

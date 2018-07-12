@@ -54,12 +54,10 @@ void NDBarSQL::init_sample_db(){
 	statement = currentConnection->con->createStatement();
 	statement->execute("USE "+currentConnection->dbName);
 	delete statement;
-	pstatement = currentConnection->con->prepareStatement("CREATE TABLE IF NOT EXISTS ?" + 
-		"(BarcodeMessage VARCHAR(50), BarcodeType VARCHAR(20), Timestamp" +
-	        " DATE DEFAULT NULL, Description VARCHAR(200) DEFAULT NULL, PRIMARY KEY(BarcodeMessage))");
+	pstatement = currentConnection->con->prepareStatement("CREATE TABLE IF NOT EXISTS ?(BarcodeMessage VARCHAR(50), BarcodeType VARCHAR(20), Timestamp DATE DEFAULT NULL, Description VARCHAR(200) DEFAULT NULL, PRIMARY KEY(BarcodeMessage))");
 	pstatement->setString(1, currentConnection->tableName);
 	pstatement->executeUpdate();
-	delete pStatement
+	delete pstatement;
 }
 
 /*
