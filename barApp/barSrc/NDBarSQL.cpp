@@ -32,38 +32,32 @@
 /*
  * Function used to connect with a MySQL database
  *
- * @params: server -> MySQL server to connect to i.e. 'localhost:3306'
- * @params: username -> username that will connect with mysql database
- * @params: password -> password for given username on given server
  * @return: con -> connection to MySQL server
  *
 */
-sql::Connection* connect_to_sql(string server, string username, string password){
+sql::Connection* NDBarSQL::connect_to_sql(){
 	sql::Driver *driver;
 	sql::Connection * con;
 	driver = get_driver_instance();
-	con = driver->connect(server, username, password);
+	con = driver->connect(currentConnection->server, currentConnection->username, currentConnection->password);
 	return con;
 }
 
 /*
  * Function that creates the inintal barcode table in the database
  *
- * @params: dbName -> name of database to contain sample table
- * @params: tableName -> chosen name for sample table
- * @params: con -> connection to database
  * @return: void
 */
-void init_sample_db(string dbName,string tableName, sql::Connection* con){
+void NDBarSQL::init_sample_db(){
 	sql::PreparedStatement* pstatement;
 	sql::Statement* statement;
-	statement = con->createStatement();
-	statement->execute("USE "+dbName);
+	statement = currentConnection->con->createStatement();
+	statement->execute("USE "+currentConnection->dbName);
 	delete statement;
-	pstatement = con->prepareStatement("CREATE TABLE IF NOT EXISTS ?" + 
+	pstatement = currentConnection->con->prepareStatement("CREATE TABLE IF NOT EXISTS ?" + 
 		"(BarcodeMessage VARCHAR(50), BarcodeType VARCHAR(20), Timestamp" +
 	        " DATE DEFAULT NULL, Description VARCHAR(200) DEFAULT NULL, PRIMARY KEY(BarcodeMessage))");
-	pstatement->setString(1, tableName);
+	pstatement->setString(1, currentConnection->tableName);
 	pstatement->executeUpdate();
 	delete pStatement
 }
@@ -71,21 +65,18 @@ void init_sample_db(string dbName,string tableName, sql::Connection* con){
 /*
  * Function that adds new barcode to sample table
  *
- * @params: dbName -> name of database
- * @params: tableName -> name of sample table
  * @params: BarcodeMessage -> message read from barcode
  * @params: BarcodeType -> type of barcode read
- * @params: con -> connection to the database
  * @return: void;
 */
-void add_to_table(string dbName, string tableName, string BarcodeMessage, string BarcodeType, sql::Connection* con){
+void NDBarSQL::add_to_table(string BarcodeMessage, string BarcodeType){
 	sql::Statement* statement;
-	statement = con->createStatement();
-	statement->execute("USE "+dbName);
+	statement = currentConnection->con->createStatement();
+	statement->execute("USE "+currentConnection->dbName);
 	delete statement;
 	sql::PreparedStatement* pstatement;
-	pstatement = con->prepareStatement("INSERT INTO ? (BarcodeMessage, BarcodeType, Timestamp) VALUES (?, ?, NOW())");
-	pstatement->setString(1, tableName);
+	pstatement = currentConnection->con->prepareStatement("INSERT INTO ? (BarcodeMessage, BarcodeType, Timestamp) VALUES (?, ?, NOW())");
+	pstatement->setString(1, currentConnection->tableName);
 	pstatement->setString(2, BarcodeMessage);
 	pstatement->setString(3, BarcodeType);
 	pstatement->executeUpdate();
@@ -95,12 +86,47 @@ void add_to_table(string dbName, string tableName, string BarcodeMessage, string
 /*
  * Function that disconnects form database
  *
- * @params: con -> connection to database
  * @return: void
  *
 */
-void disconnect(sql::Connection* con){
- 	delete con;
+void NDBarSQL::disconnect_from_sql(){
+ 	delete currentConnection->con;
 }
-  
-  
+
+
+/*
+ * Constructor for the NDBarSQL class. It initializes the connection, and creates a sample Db
+ * with the specified parameters if so desired.
+ *
+ * @params: dbName -> name of the database to connect to. Must be created in current version
+ * @params: tableName -> name of table in which barcode information will be stored
+ * @params: server -> server where database will be stored
+ * @params: username -> username to connect to database
+ * @params: password -> password to connect to the database
+ *
+*/
+NDBarSQL::NDBarSQL(string dbName, string tableName, string server, string username, string password){
+
+	//initialize the connection struct with the input values
+	currentConnection = new BarSQLConnection;
+	currentConnection->dbName = dbName;
+	currentConnection->tableName = tableName;
+	currentConnection->server = server;
+	currentConnection->username = username;
+	currentConnection->password = password;
+
+	//connect to the database
+	currentConnection->con  = connect_to_sql();
+	//init table if necessary
+	init_sample_db();
+}
+
+/*
+ * Destructor for NDBarSQL class. First it closes the connection, then deallocates
+ * memory used for previous variables
+ *
+*/
+NDBarSQL::~NDBarSQL(){
+	disconnect_from_sql();
+	if(currentConnection) delete currentConnection;
+}
