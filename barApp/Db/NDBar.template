@@ -322,6 +322,35 @@ record(mbbi, "$(P)$(R)BarcodeDatabaseType_RBV"){
 	field(SCAN, "I/O Intr")
 }
 
+record(stringout, "$(P)$(R)BarcodeDatabaseName"){
+	field(PINI, "YES")
+	field(DTYP, "asynOctetWrite")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))DATABASE_NAME")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)$(R)BarcodeDatabaseName_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))DATABASE_NAME")
+        field(VAL, "No Database Name Selected")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringout, "$(P)$(R)BarcodeTableName"){
+	field(PINI, "YES")
+	field(DTYP, "asynOctetWrite")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))TABLE_NAME")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)$(R)BarcodeTableName_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))TABLE_NAME")
+        field(VAL, "No Table Name Selected")
+	field(SCAN, "I/O Intr")
+}
+
+
 ##################################################
 # MySQL records                                  #
 ##################################################
