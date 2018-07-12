@@ -33,6 +33,7 @@ typedef struct{
 	string server;
 	string username;
 	string password;
+	sql::Connection* con;
 }BarSQLConnection;
 
 //class that contains all NDBarSQL fucntions and variables
@@ -41,6 +42,7 @@ class NDBarSQL {
 	public:
 		//constructor definition
 		NDBarSQL(string dbName, string tableName, string server, string username, string password);
+		~NDBarSQL();
 
 	protected:
 		//variables used by the SQL extention
@@ -52,13 +54,13 @@ class NDBarSQL {
 		sql::Connection* connect_to_sql();
 
 		//function that initializes the sample table
-		void init_sample_db(sql::Connection* con);
+		void init_sample_db();
 
 		//function that adds a barcode entry into the table
-		void add_to_table(string BarcodeMessage, string BarcodeType, sql::Connection* con);
+		void add_to_table(string BarcodeMessage, string BarcodeType);
 
 		//function that disconnects from the MySQL server
-		void disconnect_from_sql(sql::Connection* con);
+		void disconnect_from_sql();
 };
 
 #endif
