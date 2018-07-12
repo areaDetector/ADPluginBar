@@ -267,6 +267,18 @@ record(ai, "$(P)$(R)LowerRightY_RBV")
 }
 
 #################################################################################
+# Barcode Viewer Records                                                        #
+#################################################################################
+
+record(waveform, "$(P)$(R)DetectedBarcodes"){
+	field(DTYP, "asyn$(TYPE)ArrayIn")
+	field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))DETECTED_BARCODES")
+	field(FTVL, "$(FTVL)")
+	field(NELM, "$(NELEMENTS)")
+	field(SCAN, "I/O Intr")
+}
+
+#################################################################################
 # DATABASE LINKING RECORDS                                                      #
 #################################################################################
 
