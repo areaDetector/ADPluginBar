@@ -20,6 +20,7 @@ using namespace zbar;
 
 //include base plugin driver
 #include "NDPluginDriver.h"
+#include "NDBarSQL.h"
 
 //version numbers
 #define BAR_VERSION      1
@@ -136,6 +137,8 @@ class NDPluginBar : public NDPluginDriver {
 		int NDPluginBarBarcodeSQLServer;
 		int NDPluginBarBarcodeSQLUser;
 		int NDPluginBarBarcodeSQLPass;
+
+		NDBarSQL* sqlAccessor;
 
 	private:
 

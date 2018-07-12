@@ -24,7 +24,6 @@
 #include <iocsh.h>
 #include "NDArray.h"
 #include "NDPluginBar.h"
-#include "NDBarSQL.h"
 #include <epicsExport.h>
 
 //OpenCV is used for image manipulation, zbar for barcode detection
@@ -37,7 +36,7 @@ using namespace cv;
 using namespace zbar;
 static const char *driverName="NDPluginBar";
 static int previously_detected = 0;
-
+static int database_init = 0;
 
 
 /*
@@ -114,6 +113,71 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
 }
 
 
+/*
+ * Function responsible for calling the appropriate database push back function
+ * based on the corresponding PV value. If an invalid type is selected an error
+ * message is printed
+ *
+ * @params: barQR -> detected barcode or QR code
+ * @return: status -> -1 for failure, 0 for success
+*/
+int NDPluginBar::push_to_db(bar_QR_code barQR){
+	static const char* functionName = "push_to_db";
+	int database_type;
+	getIntegerParam(NDPluginBarBarcodeDatabaseType, &database_type);
+	switch(database_type){
+		case 0:
+			//MySQL
+			return push_to_sql(barQR);
+		case 1:
+			//MongoDB
+			//TODO
+			break;
+		default:
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s the selected database type does not exist or is not supported in this release\n", driverName, functionName);
+			return -1;
+	}
+}
+
+
+/*
+ * Function responsible for pushing back to a MySQL database.
+ * First, if the connection to the database hasn't yet been initialized, we do this now
+ * Next, helper functions that are part of the NDBarSQL class are called to insert the
+ * information into the database
+ *
+ * @params: barQR -> detected barcode or QR code
+ * @return: status -> integer representing the status of the db write
+*/
+int NDPluginBar::push_to_sql(bar_QR_code barQR){
+	static const char* functionName = "push_to_sql";
+	if(database_init==0){
+		try{
+			string dbName, tableName, server, username, password;
+			getStringParam(NDPluginBarBarcodeDatabaseName, dbName);
+			getStringParam(NDPluginBarBarcodeTableName, tableName);
+			getStringParam(NDPluginBarBarcodeSQLServer, server);
+			getStringParam(NDPluginBarBarcodeSQLUser, username);
+			getStringParam(NDPluginBarBarcodeSQLPass, password);
+			sqlAccessor = new NDBarSQL(dbName, tableName, server, username, password);
+			database_init = 1;
+		}
+		catch(...){
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error initializing the database connection\n" driverName, functionName);
+			return -1;
+		}
+	}
+	try{
+		sqlAccessor->add_to_table(barQR.data, barQR.type)
+	}
+	catch(...){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s There was an error writing to the database\n" driverName, functionName);
+		return -1;
+	}
+	return 0;
+}
+
+
 
 /*
  * Function that does the barcode decoding. It is passed an image and a vector
@@ -130,6 +194,9 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
 bool NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
 	static const char* functionName = "decode_bar_code";
+
+	int database_enabled;
+	getIntegerParam(NDPluginBarEnableBarcodeDatabase, &database_enabled);
 
 	bool found = false;
 
@@ -197,6 +264,7 @@ bool NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 				push_corners(barQR, symbol, 0);
 			}
 			codes_in_image.push_back(barQR);
+			if(database_enabled==1) push_to_db(barQR);
 			found = true;
 		}
 		counter++;
@@ -387,6 +455,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarBarcodeSQLServerString, asynParamOctet, &NDPluginBarBarcodeSQLServer);
 	createParam(NDPluginBarBarcodeSQLUserString, asynParamOctet, &NDPluginBarBarcodeSQLUser);
 	createParam(NDPluginBarBarcodeSQLPassStringm asynParamOctet, &NDPluginBarBarcodeSQLPass);
+
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
