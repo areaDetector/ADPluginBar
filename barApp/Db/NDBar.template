@@ -265,3 +265,80 @@ record(ai, "$(P)$(R)LowerRightY_RBV")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LOWER_RIGHT_Y")
 	field(SCAN, "I/O Intr")
 }
+
+
+#################################################################################
+# DATABASE LINKING RECORDS                                                      #
+#################################################################################
+
+# Records used by the MySQL MongoDB etc. connectors for the barcode plugin
+
+# Enable/Disable Database
+record(bo, "$(P)$(R)EnableBarcodeDatabase"){
+	field(PINI, "YES")
+	field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))ENABLE_DATABASE")
+	field(ZNAM, "Enabled")
+	field(ONAM, "Disabled")
+	field(VAL, "$(Enabled=0)")
+	
+}
+
+# Type of Database i.e. MySQL, MongoDB, etc.
+record(mbbo, "$(P)$(R)BarcodeDatabaseType"){
+	field(PINI, "YES")
+	field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT), $(ADDR=0),$(TIMEOUT=1))DATABASE_TYPE"))
+	field(VAL, "0")
+	field(ZRST, "None")
+	field(ZRVL, "0")
+	field(ONST, "MySQL")
+	field(ONVL, "1")
+	field(TWST, "MongoDB")
+	field(TWVL, "2")
+	info(autosaveFields, "VAL")
+}
+
+record(mbbi, "$(P)$(R)BarcodeDatabaseType_RBV"){
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT), $(ADDR=0),$(TIMEOUT=1))DATABASE_TYPE"))
+	field(ZRST, "None")
+	field(ZRVL, "0")
+	field(ONST, "MySQL")
+	field(ONVL, "1")
+	field(TWST, "MongoDB")
+	field(TWVL, "2")
+	field(SCAN, "I/O Intr")
+}
+
+##################################################
+# MySQL records                                  #
+##################################################
+
+record(stringout, "$(P)$(R)BarcodeSQLServer"){
+	field(PINI, "YES")
+	field(DTYP, "asynOctetWrite")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_SERVER")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)$(R)BarcodeSQLServer_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_SERVER")
+        field(VAL, "No Server Selected")
+	field(SCAN, "I/O Intr")
+}
+
+record(stringout, "$(P)$(R)BarcodeSQLPass"){
+	field(PINI, "YES")
+	field(DTYP, "asynOctetWrite")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_PASSWORD")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)$(R)BarcodeSQLPass_RBV"){
+	field(DTYP, "asynOctetRead")
+	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SQL_PASSWORD")
+        field(VAL, "No Server Selected")
+	field(SCAN, "I/O Intr")
+}
