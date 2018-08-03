@@ -60,16 +60,7 @@ dbLoadRecords("$(ADPLUGINBAR)/db/NDBar.template",  "P=$(PREFIX),R=Bar1:, PORT=BA
 set_requestfile_path("$(ADPLUGINBAR)/barApp/Db")
 ```
 
-This will add ADPluginBar to the boot operation when the ioc is run.
-
-Next in the configure directory at the top level of areaDetector, open the RELEASE_PRODS.local file, and add the following:
-
-```
-# Load the ADPluginBar plugin
-ADPLUGINBAR=$(AREA_DETECTOR)/ADPluginBar
-```
-
-This will tell areaDetector to include ADPluginBar at compilation.  
+This will add ADPluginBar to the boot operation when the ioc is run.  
 
 Optionally:
 In the same directory, check the commonPlugin_settings.req file to make sure the following line is uncommented:
@@ -80,8 +71,16 @@ file "NDBar_settings.req",         P=$(P),  R=Bar1:
 This has to do with the EPICS autosave feature, and currently is buggy. This is not required for Plugin operation and can
 be omitted.
 
-Next, go back into your area detector base directory, and enter the configure directory.
-Here, in the CONFIG_SITE.local.$(YOUR HOST) file, ensure that the following is defined:
+Next in the configure directory at the top level of areaDetector, open the RELEASE_PRODS.local file, and add the following:
+
+```
+# Load the ADPluginBar plugin
+ADPLUGINBAR=$(AREA_DETECTOR)/ADPluginBar
+```
+
+This will tell areaDetector to include ADPluginBar at compilation.   
+
+Then, in the CONFIG_SITE.local.$(YOUR HOST) file, ensure that the following is defined:  
 
 ```
 # OPENCV_LIB and OPENCV_INCLUDE variables should not be defined if using the opencv system library in a default location
@@ -103,7 +102,7 @@ set to "YES"
 Next, in CONFIG_SITE.local, in the same directory, make sure that WITH_OPENCV, OPENCV_EXTERNAL,
 WITH_ZBAR, and ZBAR_EXTERNAL are all set to "YES"
 
-Once you have done all of this, compile ADCore, and then run
+Once you have done all of this, compile ADSupport, then ADCore, and then run
 
 ```
 make -sj
