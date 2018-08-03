@@ -17,15 +17,16 @@ respective repositories from github, or if on a debin/ubuntu system, slightly ol
 be downloaded using the package manager with the following commands:
 
 ```
-sudo apt-get install libcv-dev libcv2.4 libcvaux-dev libcvaux2.4 libhighgui-dev 
-sudo apt-get install libhighgui2.4 libopencv-contrib-dev libopencv-contrib2.4
-sudo apt-get install libzbar-dev libzbar0 libzbarqt-dev libzbarqt0 libzbargtk-dev libzbargtk0
+sudo apt-get install libcv-dev libcvaux-dev libhighgui-dev 
+sudo apt-get install libopencv-contrib-dev
+sudo apt-get install libzbar-dev libzbarqt-dev libzbargtk-dev
 ```
 
-If possible, building from source is preferable, as the debian/ubuntu packages are outdated.
-For example, the debian package for opencv is version 2.4, while the newest version at the time
-of writing is 3.3. Thus, while the plugin will function with the default packages, it is not 
-recommended.
+In addition, the numbered versions of these packages may be needed. For example, on the debian 8 machine
+this was tested on, libcv2.4 was used.
+
+It is also possible to build both opencv and zbar from source, links to each github are placed in
+the github.io website linked at the top of this repository.
 
 Once EPICS base, synApps, OpenCV, and zbar are all installed, some changes need to be made to the
 configuration files within area detector. First, enter into your areaDetector directory, and
@@ -60,6 +61,15 @@ set_requestfile_path("$(ADPLUGINBAR)/barApp/Db")
 ```
 
 This will add ADPluginBar to the boot operation when the ioc is run.
+
+Next in the configure directory at the top level of areaDetector, open the RELEASE_PRODS.local file, and add the following:
+
+```
+# Load the ADPluginBar plugin
+ADPLUGINBAR=$(AREA_DETECTOR)/ADPluginBar
+```
+
+This will tell areaDetector to include ADPluginBar at compilation.  
 
 Optionally:
 In the same directory, check the commonPlugin_settings.req file to make sure the following line is uncommented:
