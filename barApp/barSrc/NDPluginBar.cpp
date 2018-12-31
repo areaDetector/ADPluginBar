@@ -7,7 +7,8 @@
  *
  * Author: Jakub Wlodek
  *
- * Created December 3, 2017
+ * Created on: December 3, 2017
+ * Last updated: December 31, 2018
  *
 */
 
@@ -39,10 +40,11 @@ static int previously_detected = 0;
 
 
 
-/*
+/**
  * Function responsible for checking if discovered bar code is a repeat
+ * This is to avoid plugin re-detecting the same barcodes over and over
  *
- * @params: data -> data in discovered bar code
+ * @params[in]: data -> data in discovered bar code
  * @return: true if data is the same, false otherwise
  */
 bool NDPluginBar::check_past_code(string data){
@@ -62,35 +64,35 @@ bool NDPluginBar::check_past_code(string data){
 
 
 
-/*
+/**
  * Function used to use a form of thresholding to reverse the coloration of a bar code
  * or QR code that is in the white on black format rather than the standard black on white
  *
  * @params[out]: img -> image containing inverse QR code
- * @return: inverted image
+ * @return: status -> if image is 8 bit, then invert it and success, otherwise, error
  */
 asynStatus NDPluginBar::fix_inverted(Mat &img){
 	if(img.depth() != CV_8U){
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, only 8 bit images support inversion\n", driverName, "fix_inverted");
 		return asynError;
 	}
-	subtract(Scalar(255,255,255), img, img);
+	subtract(Scalar(255), img, img);
 	return asynSuccess;
 }
 
 
 
-/*
+/**
  * Function that is used simply to offload the process of setting the PV values
  * of the detected corners. It takes the current detected bar code, assignes the values of
  * the corners to the struct, and then, if it is the first detected code, sets PV vals
  *
- * @params: discovered -> struct contatining discovered bar or QR code
- * @params: symbol -> current discovered code
- * @params: update_corners -> flag to see if it is the first detected code
- * @return: void
+ * @params[in]:  discovered 	-> struct contatining discovered bar or QR code
+ * @params[in]:  symbol 		-> current discovered code
+ * @params[in]:  update_corners -> flag to see if it is the first detected code
+ * @return: status
  */
-void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners){
+asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners){
 	for(int i = 0; i< symbol->get_location_size(); i++){
 		discovered.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
 		if(update_corners==1){
@@ -115,8 +117,27 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
 }
 
 
+/**
+ * Function that uses zbar to scan image for barcodes
+ * 
+ * @params[in]: img -> input image in Mat format
+ * @return: Image -> new image object with scanned symbols
+ */
+Image scan_image(Mat &img){
 
-/*
+	//initialize the image and the scanner object
+	ImageScanner zbarScanner;
+	zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
+	Image scannedImage(img.cols, img.rows, "Y800", (uchar*) img.data, img.cols *img.rows);
+
+	//scan the image with the zbar scanner
+	zbarScanner.scan(scannedImage);
+
+	return scannedImage;
+}
+
+
+/**
  * Function that does the barcode decoding. It is passed an image and a vector
  * that will store all of the codes found in the image. A zbar scanner is initialized.
  * The image is changed from an opencv to a Image object, and then it is scanned by zbar.
@@ -128,7 +149,7 @@ void NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &s
  * @params: codes_in_image -> vector that stores all of the detected barcodes
  * @return: void
  */
-void NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+asynStatus NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
 
 	static const char* functionName = "decode_bar_code";
 

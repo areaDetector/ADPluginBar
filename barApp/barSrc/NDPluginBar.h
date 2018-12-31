@@ -23,37 +23,39 @@ using namespace zbar;
 #include "NDPluginDriver.h"
 
 //version numbers
-#define BAR_VERSION      1
-#define BAR_REVISION     1
-#define BAR_MODIFICATION 0
+#define BAR_VERSION      	1
+#define BAR_REVISION     	1
+#define BAR_MODIFICATION 	2
+
+// Number of barcodes supported at one time
+#define NUM_CODES			5
+
+
+/* Here I will define all of the output data types once the database is written */
+#define NDPluginBarBarcodeMessage1String 	"BARCODE_MESSAGE1" 		//asynOctet
+#define NDPluginBarBarcodeType1String 		"BARCODE_TYPE1" 		//asynOctet
+#define NDPluginBarBarcodeMessage2String 	"BARCODE_MESSAGE2" 		//asynOctet
+#define NDPluginBarBarcodeType2String 		"BARCODE_TYPE2" 		//asynOctet
+#define NDPluginBarBarcodeMessage3String 	"BARCODE_MESSAGE3" 		//asynOctet
+#define NDPluginBarBarcodeType3String 		"BARCODE_TYPE3" 		//asynOctet
+#define NDPluginBarBarcodeMessage4String 	"BARCODE_MESSAGE4" 		//asynOctet
+#define NDPluginBarBarcodeType4String 		"BARCODE_TYPE4" 		//asynOctet
+#define NDPluginBarBarcodeMessage5String 	"BARCODE_MESSAGE5" 		//asynOctet
+#define NDPluginBarBarcodeType5String 		"BARCODE_TYPE5" 		//asynOctet
+#define NDPluginBarNumberCodesString 		"NUMBER_CODES" 			//asynInt32
+#define NDPluginBarInvertedBarcodeString 	"INVERTED_CODE" 		//asynInt32
+#define NDPluginBarUpperLeftXString 		"UPPER_LEFT_X" 			//asynInt32
+#define NDPluginBarUpperRightXString 		"UPPER_RIGHT_X" 		//asynInt32
+#define NDPluginBarLowerLeftXString 		"LOWER_LEFT_X" 			//asynInt32
+#define NDPluginBarLowerRightXString 		"LOWER_RIGHT_X" 		//asynInt32
+#define NDPluginBarUpperLeftYString 		"UPPER_LEFT_Y" 			//asynInt32
+#define NDPluginBarUpperRightYString 		"UPPER_RIGHT_Y" 		//asynInt32
+#define NDPluginBarLowerLeftYString 		"LOWER_LEFT_Y" 			//asynInt32
+#define NDPluginBarLowerRightYString 		"LOWER_RIGHT_Y" 		//asynInt32
 
 
 
-//Here I will define all of the output data types once the database is written
-#define NDPluginBarBarcodeMessage1String "BARCODE_MESSAGE1" //asynOctet
-#define NDPluginBarBarcodeType1String "BARCODE_TYPE1" //asynOctet
-#define NDPluginBarBarcodeMessage2String "BARCODE_MESSAGE2" //asynOctet
-#define NDPluginBarBarcodeType2String "BARCODE_TYPE2" //asynOctet
-#define NDPluginBarBarcodeMessage3String "BARCODE_MESSAGE3" //asynOctet
-#define NDPluginBarBarcodeType3String "BARCODE_TYPE3" //asynOctet
-#define NDPluginBarBarcodeMessage4String "BARCODE_MESSAGE4" //asynOctet
-#define NDPluginBarBarcodeType4String "BARCODE_TYPE4" //asynOctet
-#define NDPluginBarBarcodeMessage5String "BARCODE_MESSAGE5" //asynOctet
-#define NDPluginBarBarcodeType5String "BARCODE_TYPE5" //asynOctet
-#define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
-#define NDPluginBarInvertedBarcodeString "INVERTED_CODE" //asynInt32
-#define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
-#define NDPluginBarUpperRightXString "UPPER_RIGHT_X" //asynInt32
-#define NDPluginBarLowerLeftXString "LOWER_LEFT_X" //asynInt32
-#define NDPluginBarLowerRightXString "LOWER_RIGHT_X" //asynInt32
-#define NDPluginBarUpperLeftYString "UPPER_LEFT_Y" //asynInt32
-#define NDPluginBarUpperRightYString "UPPER_RIGHT_Y" //asynInt32
-#define NDPluginBarLowerLeftYString "LOWER_LEFT_Y" //asynInt32
-#define NDPluginBarLowerRightYString "LOWER_RIGHT_Y" //asynInt32
-
-
-
-//structure that contains information about the bar/QR code
+/* structure that contains information about the bar/QR code */
 typedef struct{
 	string type;
 	string data;
@@ -62,7 +64,7 @@ typedef struct{
 
 
 
-//class that does barcode readings
+/* class that does barcode readings */
 class NDPluginBar : public NDPluginDriver {
 	public:
 		NDPluginBar(const char *portName, int queueSize, int blockingCallbacks,
@@ -122,6 +124,13 @@ class NDPluginBar : public NDPluginDriver {
 		int NDPluginBarLowerRightY;
 
 	private:
+
+		// arrays that hold indexes of PVs for messages and types
+		int barcodeMessagePVs[NUM_CODES];
+		int barcodeTypePVs[NUM_CODES];
+
+		// function for scanning img for barcodes
+		Image scan_image(Mat &img);
 
 		// function that converts NDArray into Mat img
 		asynStatus ndArray2Mat(NDArray* pArray, Mat &img);
