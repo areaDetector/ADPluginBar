@@ -129,6 +129,10 @@ class NDPluginBar : public NDPluginDriver {
 		int barcodeMessagePVs[NUM_CODES];
 		int barcodeTypePVs[NUM_CODES];
 
+		// vector that stores currently discovered barcodes
+		vector<bar_QR_code> codes_in_image;
+		asynStatus clearPreviousCodes();
+
 		// functions called on plugin initialization
 		asynStatus initPVArrays();
 
@@ -140,7 +144,7 @@ class NDPluginBar : public NDPluginDriver {
 
 		// Decoding functions
 		Image scan_image(Mat &img);
-		asynStatus decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_image);
+		asynStatus decode_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image);
 
 
 		//function that displays detected bar codes

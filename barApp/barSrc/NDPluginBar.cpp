@@ -281,9 +281,9 @@ Image scan_image(Mat &img){
  * @params: codes_in_image -> vector that stores all of the detected barcodes
  * @return: void
  */
-asynStatus NDPluginBar::decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_image){
+asynStatus NDPluginBar::decode_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image){
 
-	static const char* functionName = "decode_bar_code";
+	static const char* functionName = "decode_bar_codes";
 
 	// first scan the image for barcodes
 	Image scannedImage = scan_image(img);
@@ -347,17 +347,24 @@ asynStatus NDPluginBar::decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_
  * @return: status
 */
 asynStatus NDPluginBar::show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image){
-	for(int i = 0; i<codes_in_image.size(); i++){
-		vector<Point> barPoints = codes_in_image[i].position;
-		vector<Point> outside;
-		if(barPoints.size() > 4) convexHull(barPoints, outside);
-		else outside = barPoints;
-		int n = outside.size();
-		for(int j = 0; j<n; j++){
-			line(img, outside[j], outside[(j+1)%n], Scalar(255,0,0),3);
+	const char* functionName = "show_bar_codes";
+	try{
+		cvtColor(img, img, COLOR_GRAY2RGB);
+		for(int i = 0; i<codes_in_image.size(); i++){
+			vector<Point> barPoints = codes_in_image[i].position;
+			vector<Point> outside;
+			if(barPoints.size() > 4) convexHull(barPoints, outside);
+			else outside = barPoints;
+			int n = outside.size();
+			for(int j = 0; j<n; j++){
+				line(img, outside[j], outside[(j+1)%n], Scalar(255,0,0),3);
+			}
 		}
+		return asynSuccess;
+	}catch(cv::Exception &e){
+		printCVError(e, functionName);
+		return asynError;
 	}
-	return asynSuccess
 }
 
 
@@ -373,70 +380,51 @@ asynStatus NDPluginBar::show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_i
  * @return: void
 */
 void NDPluginBar::processCallbacks(NDArray *pArray){
-
-	//start with an empty array for copy and array info
-	NDArray *pScratch = NULL;
-	NDArrayInfo arrayInfo;
-
-	//some information we need
-	unsigned int numRows, rowSize;
-	unsigned char *inData, *outData;
-
 	static const char* functionName = "processCallbacks";
-
-	// check if image is in mono form
-	if (pArray->ndims != 2){
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Please convert barcode reader plugin input image format to mono\n",  driverName, functionName);
-		return;
-	}
+	//start with an empty array for copy and array info
+	NDArray *pScratch;
+	Mat img;
+	asynStatus status;
+	NDArrayInfo arrayInfo;
 
 	//call base class and get information about frame
 	NDPluginDriver::beginProcessCallbacks(pArray);
-	pArray->getInfo(&arrayInfo);
-	rowSize = pArray->dims[arrayInfo.xDim].size;
-	numRows = pArray->dims[arrayInfo.yDim].size;
 
+	// convert to Mat
+	pArray->getInfo(&arrayInfo);
+	status = ndArray2Mat(pArray, &arrayInfo, img);
+	if(status == asynError){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error converting to Mat\n", driverName, functionName);
+		return;
+	}
 	//unlock the mutex for the processing portion
 	this->unlock();
 
-	//create a copy of the array
-	NDDimension_t scratch_dims[2];
-	pScratch->initDimension(&scratch_dims[0], rowSize);
-	pScratch->initDimension(&scratch_dims[1], numRows);
-	this->pNDArrayPool->convert(pArray, &pScratch, NDUInt8);
-
-	pScratch->getInfo(&arrayInfo);
-	rowSize = pScratch->dims[arrayInfo.xDim].size;
-	numRows = pScratch->dims[arrayInfo.yDim].size;
-
-	//convert the array into an OpenCV "Mat" image
-	Mat img = Mat(numRows, rowSize, CV_8UC1);
-	Mat barcodeFound;
-	vector<bar_QR_code> codes_in_image;
-
-	inData = (unsigned char *)pScratch->pData;
-	outData = (unsigned char *)img.data;
-	memcpy(outData, inData, arrayInfo.nElements * sizeof(unsigned char));
-
+	
 	//check to see if we need to invert barcode
 	int inverted_code;
 	getIntegerParam(NDPluginBarInvertedBarcode, &inverted_code);
 
 	if(inverted_code == 1){
-		Mat temp = fix_inverted(img);
-		decode_bar_code(temp, codes_in_image);
+		status = fix_inverted(img);
+		if(status != asynError) status = decode_bar_codes(img, codes_in_image);
 	}
 	else{
-		//decode the bar codes in the image if any
-		decode_bar_code(img, codes_in_image);
-		//show_bar_codes(img, codes_in_image);
+		status = decode_bar_codes(img, codes_in_image);
 	}
+
+	if(status != asynError) status = show_bar_codes(img, codes_in_image);
 
 	this->lock();
 
+	status = mat2NDArray(pScratch, img);
+	if(status == asynError){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, image not processed correctly\n", driverName, functionName);
+		return;
+	}
+	doCallbacksGenericPointer(pScratch, NDArrayData, 0);
 	//release the array
-	if (NULL != pScratch)
-		pScratch->release();
+	pScratch->release();
 
 	callParamCallbacks();
 
