@@ -144,11 +144,11 @@ class NDPluginBar : public NDPluginDriver {
 
 		// Decoding functions
 		Image scan_image(Mat &img);
-		asynStatus decode_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image);
+		asynStatus decode_bar_codes(Mat &img);
 
 
 		//function that displays detected bar codes
-		asynStatus show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image);
+		asynStatus show_bar_codes(Mat &img);
 
 		//function that checks for barcode repetition
 		bool check_past_code(string data);
@@ -158,6 +158,7 @@ class NDPluginBar : public NDPluginDriver {
 
 		//function that pushes barcode coordinate data to PVs
 		asynStatus push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
+		asynStatus updateCorners(bar_QR_code &discovered);
 
 };
 
