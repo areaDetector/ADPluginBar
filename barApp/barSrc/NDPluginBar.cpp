@@ -240,10 +240,11 @@ asynStatus NDPluginBar::fix_inverted(Mat &img){
 asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners){
 	for(int i = 0; i< symbol->get_location_size(); i++){
 		discovered.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
-		if(update_corners==1){
-			updateCorners(discovered);
-		}
 	}
+	if(update_corners==1){
+		updateCorners(discovered);
+	}
+	return asynSuccess;
 }
 
 
@@ -255,7 +256,7 @@ asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolItera
  * @return: status
  */
 asynStatus NDPluginBar::updateCorners(bar_QR_code &discovered){
-	const char* functionName = "updateCorners";
+	//const char* functionName = "updateCorners";
 	int i;
 	for(i = 0; i < 4; i++){
 		if(i==0){
@@ -331,6 +332,7 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 		bool check = check_past_code(barQR.data);
 		if(check == true){
 			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
+			return asynError;
 		}
 		else{
 
@@ -362,8 +364,7 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 		}
 		counter++;
 	}
-	
-	delete scannedImage;
+	return asynSuccess;
 }
 
 
@@ -382,7 +383,7 @@ asynStatus NDPluginBar::show_bar_codes(Mat &img){
 	const char* functionName = "show_bar_codes";
 	try{
 		cvtColor(img, img, COLOR_GRAY2RGB);
-		for(int i = 0; i<codes_in_image.size(); i++){
+		for(unsigned int i = 0; i<codes_in_image.size(); i++){
 			vector<Point> barPoints = codes_in_image[i].position;
 			vector<Point> outside;
 			if(barPoints.size() > 4) convexHull(barPoints, outside);
