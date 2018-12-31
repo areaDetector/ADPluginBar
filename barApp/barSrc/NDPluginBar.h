@@ -129,17 +129,19 @@ class NDPluginBar : public NDPluginDriver {
 		int barcodeMessagePVs[NUM_CODES];
 		int barcodeTypePVs[NUM_CODES];
 
-		// function for scanning img for barcodes
+		// functions called on plugin initialization
+		asynStatus initPVArrays();
+
+		// image type conversion functions
+		void printCVError(cv::Exception &e, const char* functionName);
+		asynStatus ndArray2Mat(NDArray* pArray, NDArrayInfo* arrayInfo, Mat &img);
+		asynStatus mat2NDArray(NDArray* pScratch, Mat &img);
+
+
+		// Decoding functions
 		Image scan_image(Mat &img);
-
-		// function that converts NDArray into Mat img
-		asynStatus ndArray2Mat(NDArray* pArray, Mat &img);
-
-		// function that converts NDArray back into Mat
-		asynStatus mat2NDArray(NDArray*pArray, Mat &img);
-
-		//function that does the decoding
 		asynStatus decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_image);
+
 
 		//function that displays detected bar codes
 		asynStatus show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image);

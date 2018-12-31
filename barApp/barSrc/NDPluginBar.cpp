@@ -35,9 +35,141 @@
 using namespace std;
 using namespace cv;
 using namespace zbar;
-static const char *driverName="NDPluginBar";
-static int previously_detected = 0;
 
+
+static const char *driverName="NDPluginBar";
+
+//------------------------------------------------------
+// Functions called at init
+//------------------------------------------------------
+
+/* Function that places PV indexes into arrays for easier iteration */
+asynStatus NDPluginBar::initPVArrays(){
+	barcodeMessagePVs[0] = NDPluginBarBarcodeMessage1;
+	barcodeMessagePVs[1] = NDPluginBarBarcodeMessage2;
+	barcodeMessagePVs[2] = NDPluginBarBarcodeMessage3;
+	barcodeMessagePVs[3] = NDPluginBarBarcodeMessage4;
+	barcodeMessagePVs[4] = NDPluginBarBarcodeMessage5;
+	
+	barcodeTypePVs[0] = NDPluginBarBarcodeType1;
+	barcodeTypePVs[1] = NDPluginBarBarcodeType2;
+	barcodeTypePVs[2] = NDPluginBarBarcodeType3;
+	barcodeTypePVs[3] = NDPluginBarBarcodeType4;
+	barcodeTypePVs[4] = NDPluginBarBarcodeType5;
+	return asynSuccess;
+
+}
+
+
+//------------------------------------------------------
+// Image type conversion functions
+//------------------------------------------------------
+
+void NDPluginBar::printCVError(cv::Exception &e, const char* functionName){
+	cout << "OpenCV Error in function " << functionName << " with code: " << e.code << ", " << e.err;
+}
+
+
+/**
+ * Function that converts an NDArray into a Mat object
+ * 
+ * @params[in]: pArray	-> pointer to an NDArray
+ * @params[in]: arrayInfo -> pointer to info about NDArray
+ * @params[out]: img	-> smart pointer to output Mat
+ * @return: success if able to convert, error otherwise
+ */
+asynStatus NDPluginBar::ndArray2Mat(NDArray* pArray, NDArrayInfo *arrayInfo, Mat &img){
+	const char* functionName = "ndArray2Mat";
+	// data type and num dimensions used during conversion
+	NDDataType_t dataType = pArray->dataType;
+	int ndims = pArray->ndims;
+
+	switch(dataType){
+		case NDUInt8:
+			if(ndims == 2) img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_8UC1, pArray->pData);
+			else img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_8UC3, pArray->pData);
+			break;
+		case NDInt8:
+			if(ndims == 2) img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_8SC1, pArray->pData);
+			else img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_8SC3, pArray->pData);
+			break;
+		case NDUInt16:
+			if(ndims == 2) img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_16UC1, pArray->pData);
+			else img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_16UC3, pArray->pData);
+			break;
+		case NDInt16:
+			if(ndims == 2) img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_16SC1, pArray->pData);
+			else img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_16SC3, pArray->pData);
+			break;
+		default:
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error: unsupported data format, only 8 and 16 bit images allowed\n", driverName, functionName);
+			return asynError;
+	}
+	try{
+		// image must be converted to grayscale before barcode processing
+		if(img.channels() != 1){
+			cvtColor(img, img, COLOR_RGB2GRAY);
+		}
+	}catch(cv::Exception &e){
+		printCVError(e, functionName);
+		return asynError;
+	}
+	return asynSuccess;
+}
+
+
+/**
+ * Function that converts Mat back into NDArray. This function is guaranteed to 
+ * have either a 8 bit or 16 bit color image, because the bounding boxes drawn
+ * around the detected barcodes are red
+ * 
+ * @params[out]: pScratch -> output NDArray
+ * @params[in]: img	-> Mat with barcode bounding boxes drawn
+ * @return: success if converted correctly, error otherwise 
+ */ 
+asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
+	const char* functionName =  "mat2NDArray";
+	int ndims = 3;
+	Size matSize = img.size();
+	NDDataType_t dataType;
+	NDColorMode_t colorMode = NDColorModeRGB1;
+	size_t dims[ndims];
+	dims[0] = 3;
+	dims[1] = matSize.width;
+	dims[2] = matSize.height;
+
+	if(img.depth() == CV_8U) dataType = NDUInt8;
+	else if(img.depth() == CV_8S) dataType = NDInt8;
+	else if(img.depth() == CV_16U) dataType = NDUInt16;
+	else if(img.depth() == CV_16S) dataType = NDInt16;
+
+	pScratch = pNDArrayPool->alloc(ndims, dims, dataType, 0, NULL);
+	if(pScratch == NULL){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, unable to allocate array\n", driverName, functionName);
+		img.release();
+		return asynError;
+	}
+
+	NDArrayInfo arrayInfo;
+	pScratch->getInfo(&arrayInfo);
+
+	size_t dataSize = img.step[0]*img.rows;
+
+	if(dataSize != arrayInfo.totalBytes){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, invalid array size\n", driverName, functionName);
+		img.release();
+		return asynError;
+	}
+
+	memcpy((unsigned char*) pScratch->pData, (unsigned char*) img.data, dataSize);
+	pScratch->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
+    pScratch->pAttributeList->add("DataType", "Data Type", NDAttrInt32, &dataType);
+    getAttributes(pScratch->pAttributeList);
+    callParamCallbacks();
+	// now that data is copied to NDArray, we don't need mat anymore
+	img.release();
+	return asynSuccess;
+}
 
 
 /**
@@ -149,36 +281,17 @@ Image scan_image(Mat &img){
  * @params: codes_in_image -> vector that stores all of the detected barcodes
  * @return: void
  */
-asynStatus NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image){
+asynStatus NDPluginBar::decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_image){
 
 	static const char* functionName = "decode_bar_code";
 
-	//initialize the image and the scanner object
-	ImageScanner zbarScanner;
-	zbarScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE,1);
-	Image image(im.cols, im.rows, "Y800", (uchar*) im.data, im.cols *im.rows);
-
-	//scan the image with the zbar scanner
-	zbarScanner.scan(image);
-
-	//arrays of barcode messages and types
-	int messages[5];
-	messages[0] = NDPluginBarBarcodeMessage1;
-	messages[1] = NDPluginBarBarcodeMessage2;
-	messages[2] = NDPluginBarBarcodeMessage3;
-	messages[3] = NDPluginBarBarcodeMessage4;
-	messages[4] = NDPluginBarBarcodeMessage5;
-	int types[5];
-	types[0] = NDPluginBarBarcodeType1;
-	types[1] = NDPluginBarBarcodeType2;
-	types[2] = NDPluginBarBarcodeType3;
-	types[3] = NDPluginBarBarcodeType4;
-	types[4] = NDPluginBarBarcodeType5;
+	// first scan the image for barcodes
+	Image scannedImage = scan_image(img);
 
 	//counter for number of codes in current image
 	int counter = 0;
 
-	for(Image::SymbolIterator symbol = image.symbol_begin(); symbol!=image.symbol_end();++symbol){
+	for(Image::SymbolIterator symbol = scannedImage.symbol_begin(); symbol!=scannedImage.symbol_end();++symbol){
 
 		//get information from detected bar code and populate a bar_QR_code struct
 		bar_QR_code barQR;
@@ -188,19 +301,16 @@ asynStatus NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_i
 		//check to see if code has been detected already
 		bool check = check_past_code(barQR.data);
 		if(check == true){
-			if(previously_detected==0)
-				asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
-			previously_detected = 1;
+			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
 		}
 		else{
-			previously_detected = 0;
 			//print information
 			cout << "Type: " << barQR.type << endl;
 			cout << "Data: " << barQR.data << endl << endl;
 
 			//set PVs
-			setStringParam(types[counter], barQR.type);
-			setStringParam(messages[counter], barQR.data);
+			setStringParam(barcodeTypePVs[counter], barQR.type);
+			setStringParam(barcodeMessagePVs[counter], barQR.data);
 
 			//iterate the number of discovered codes
 			int num_codes = 0;
@@ -220,6 +330,8 @@ asynStatus NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_i
 		}
 		counter++;
 	}
+	
+	delete scannedImage;
 }
 
 
@@ -230,11 +342,11 @@ asynStatus NDPluginBar::decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_i
  *
  * TODO: Change this function to pipe coordinate information back into NDArray
  *
- * @params: im -> image in which the barcode was discovered
+ * @params: img -> image in which the barcode was discovered
  * @params: codes_in_image -> all barcodes detected in the image
- * @return: void
+ * @return: status
 */
-void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
+asynStatus NDPluginBar::show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image){
 	for(int i = 0; i<codes_in_image.size(); i++){
 		vector<Point> barPoints = codes_in_image[i].position;
 		vector<Point> outside;
@@ -242,11 +354,10 @@ void NDPluginBar::show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image){
 		else outside = barPoints;
 		int n = outside.size();
 		for(int j = 0; j<n; j++){
-			line(im, outside[j], outside[(j+1)%n], Scalar(255,255,255),3);
+			line(img, outside[j], outside[(j+1)%n], Scalar(255,0,0),3);
 		}
 	}
-	imshow("Barcode found", im);
-	waitKey(0);
+	return asynSuccess
 }
 
 
@@ -374,6 +485,8 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	createParam(NDPluginBarUpperRightYString, asynParamInt32, &NDPluginBarUpperRightY);
 	createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
 	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
+
+	initPVArrays();
 
 	setStringParam(NDPluginDriverPluginType, "NDPluginBar");
 	epicsSnprintf(versionString, sizeof(versionString), "%d.%d.%d", BAR_VERSION, BAR_REVISION, BAR_MODIFICATION);
