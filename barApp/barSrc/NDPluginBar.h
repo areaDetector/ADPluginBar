@@ -123,20 +123,26 @@ class NDPluginBar : public NDPluginDriver {
 
 	private:
 
+		// function that converts NDArray into Mat img
+		asynStatus ndArray2Mat(NDArray* pArray, Mat &img);
+
+		// function that converts NDArray back into Mat
+		asynStatus mat2NDArray(NDArray*pArray, Mat &img);
+
 		//function that does the decoding
-		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
+		asynStatus decode_bar_code(Mat &img, vector<bar_QR_code> &codes_in_image);
 
 		//function that displays detected bar codes
-		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
+		asynStatus show_bar_codes(Mat &img, vector<bar_QR_code> &codes_in_image);
 
 		//function that checks for barcode repetition
 		bool check_past_code(string data);
 
 		//function that allows for reading inverted barcodes
-		Mat fix_inverted(Mat &im);
+		asynStatus fix_inverted(Mat &img);
 
 		//function that pushes barcode coordinate data to PVs
-		void push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
+		asynStatus push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
 
 };
 

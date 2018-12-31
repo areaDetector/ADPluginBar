@@ -66,14 +66,16 @@ bool NDPluginBar::check_past_code(string data){
  * Function used to use a form of thresholding to reverse the coloration of a bar code
  * or QR code that is in the white on black format rather than the standard black on white
  *
- * @params: im -> image containing inverse QR code
+ * @params[out]: img -> image containing inverse QR code
  * @return: inverted image
  */
-Mat NDPluginBar::fix_inverted(Mat &im){
-	Mat inverted(255-im);
-	//imshow("temp", inverted);
-	//waitKey(0);
-	return inverted;
+asynStatus NDPluginBar::fix_inverted(Mat &img){
+	if(img.depth() != CV_8U){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, only 8 bit images support inversion\n", driverName, "fix_inverted");
+		return asynError;
+	}
+	subtract(Scalar(255,255,255), img, img);
+	return asynSuccess;
 }
 
 
