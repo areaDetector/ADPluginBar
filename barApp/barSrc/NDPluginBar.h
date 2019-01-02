@@ -74,12 +74,15 @@ class NDPluginBar : public NDPluginDriver {
 
 		void processCallbacks(NDArray *pArray);
 
+		virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
+
 	protected:
 
 		//in this section i define the coords of database vals
 
 		//message contained in bar code and its type
 		int NDPluginBarBarcodeMessage1;
+		#define ND_BAR_FIRST_PARAM	NDPluginBarBarcodeMessage1
 		int NDPluginBarBarcodeType1;
 
 		int NDPluginBarBarcodeMessage2;
@@ -131,6 +134,10 @@ class NDPluginBar : public NDPluginDriver {
 		// arrays that hold indexes of PVs for messages and types
 		int barcodeMessagePVs[NUM_CODES];
 		int barcodeTypePVs[NUM_CODES];
+
+		// arrays that hold indexes for PVs for corners
+		int cornerXPVs[4];
+		int cornerYPVs[4];
 
 		// vector that stores currently discovered barcodes
 		vector<bar_QR_code> codes_in_image;

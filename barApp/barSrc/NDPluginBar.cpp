@@ -56,8 +56,18 @@ asynStatus NDPluginBar::initPVArrays(){
 	barcodeTypePVs[2] = NDPluginBarBarcodeType3;
 	barcodeTypePVs[3] = NDPluginBarBarcodeType4;
 	barcodeTypePVs[4] = NDPluginBarBarcodeType5;
-	return asynSuccess;
 
+	cornerXPVs[0] = NDPluginBarUpperLeftX;
+	cornerXPVs[2] = NDPluginBarUpperRightX;
+	cornerXPVs[3] = NDPluginBarLowerLeftX;
+	cornerXPVs[4] = NDPluginBarLowerRightX;
+
+	cornerYPVs[0] = NDPluginBarUpperLeftY;
+	cornerYPVs[2] = NDPluginBarUpperRightY;
+	cornerYPVs[3] = NDPluginBarLowerLeftY;
+	cornerYPVs[4] = NDPluginBarLowerRightY;
+
+	return asynSuccess;
 }
 
 
@@ -393,6 +403,47 @@ asynStatus NDPluginBar::show_bar_codes(Mat &img){
 	}
 }
 
+
+/**
+ * Override of NDPluginDriver function. Used when selecting between barcodes
+ * for which corners should be shown.
+ * 
+ * @params[in]: pasynUser	-> pointer to asyn User that initiated the transaction
+ * @params[in]: value		-> value PV was set to
+ * @return: success if PV was updated correctly, otherwise error
+ */
+asynStatus NDPluginBar::writeInt32(asynUser* pasynUser, epicsInt32 value){
+	const char* functionName = "writeInt32";
+	int function = pasynUser->reason;
+	asynStatus status = asynSuccess;
+
+	status = setIntegerParam(function, value);
+	asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER, "%s::%s function = %d value=%d\n", driverName, functionName, function, value);
+
+	if(function == NDPluginBarCodeCorners){
+		int i;
+		if(codes_in_image.size() < value){
+			for(i = 0; i < 4; i++){
+				setIntegerParam(cornerXPVs[i], 0);
+				setIntegerParam(cornerYPVs[i], 0);
+			}
+		}
+		else{
+			for(i = 0; i< 4; i++){
+				setIntegerParam(cornerXPVs[i], codes_in_image[value].position[i].x);
+				setIntegerParam(cornerYPVs[i], codes_in_image[value].position[i].y);
+			}
+		}
+	}
+	else if(function < ND_BAR_FIRST_PARAM){
+		status = NDPluginDriver::writeInt32(pasynUser, value);
+	}
+	callParamCallbacks();
+	if(status){
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error writing Int32 val to PV\n", driverName, functionName);
+	}
+	return status;
+}
 
 
 /* Process callbacks function inherited from NDPluginDriver.
