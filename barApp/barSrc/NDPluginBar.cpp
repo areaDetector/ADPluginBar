@@ -351,8 +351,11 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 		getIntegerParam(NDPluginBarNumberCodes, &num_codes);
 		num_codes = num_codes+1;
 		setIntegerParam(NDPluginBarNumberCodes, num_codes);
+
+		int code_corners;
+		getIntegerParam(NDPluginBarCodeCorners, &code_corners);
 		//only the first code has its coordinates saved
-		if(counter == 0){
+		if(counter == code_corners){
 			//push location data
 			push_corners(barQR, symbol, 1);
 		}

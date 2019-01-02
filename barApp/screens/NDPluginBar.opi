@@ -10,7 +10,7 @@
   <background_color>
     <color red="187" green="187" blue="187" />
   </background_color>
-  <boy_version>5.1.0.201706291447</boy_version>
+  <boy_version>5.1.0.201609071627</boy_version>
   <foreground_color>
     <color red="0" green="0" blue="0" />
   </foreground_color>
@@ -56,7 +56,7 @@
     </fg_gradient_color>
     <fill_level>100.0</fill_level>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -114,7 +114,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <fill_level>0.0</fill_level>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -161,7 +161,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="15" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="15" style="0" />
     </font>
     <foreground_color>
       <color red="10" green="0" blue="184" />
@@ -201,7 +201,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -225,8 +225,8 @@ $(pv_value)</tooltip>
     <width>136</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-6b43</wuid>
-    <x>397</x>
-    <y>80</y>
+    <x>395</x>
+    <y>62</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -244,7 +244,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -277,8 +277,8 @@ $(pv_value)</tooltip>
     <width>230</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-6b41</wuid>
-    <x>539</x>
-    <y>80</y>
+    <x>537</x>
+    <y>62</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -293,7 +293,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -317,8 +317,8 @@ $(pv_value)</tooltip>
     <width>121</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-6b40</wuid>
-    <x>409</x>
-    <y>107</y>
+    <x>407</x>
+    <y>89</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -336,7 +336,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -369,8 +369,8 @@ $(pv_value)</tooltip>
     <width>134</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-6b3e</wuid>
-    <x>542</x>
-    <y>108</y>
+    <x>540</x>
+    <y>90</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -385,7 +385,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -428,7 +428,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -477,7 +477,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -520,7 +520,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -569,7 +569,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -612,7 +612,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -661,7 +661,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -704,7 +704,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -753,7 +753,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -774,11 +774,11 @@ $(pv_value)</tooltip>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>260</width>
+    <width>230</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-6b27</wuid>
-    <x>407</x>
-    <y>229</y>
+    <x>396</x>
+    <y>230</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -796,7 +796,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -848,7 +848,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -900,7 +900,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -952,7 +952,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1009,7 +1009,7 @@ $(pv_value)</tooltip>
     <fill_arrow>true</fill_arrow>
     <fill_level>0.0</fill_level>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1065,7 +1065,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <fill_level>0.0</fill_level>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1097,7 +1097,7 @@ $(pv_value)</tooltip>
     <width>375</width>
     <wuid>60e4f92d:16424156f07:-690b</wuid>
     <x>394</x>
-    <y>214</y>
+    <y>199</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -1112,7 +1112,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1127,17 +1127,17 @@ $(pv_value)</tooltip>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts />
-    <text>Number Codes</text>
+    <text>Number Codes Detected</text>
     <tooltip></tooltip>
     <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>122</width>
+    <width>203</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-68ef</wuid>
-    <x>412</x>
-    <y>139</y>
+    <x>408</x>
+    <y>128</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -1155,7 +1155,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1188,62 +1188,8 @@ $(pv_value)</tooltip>
     <width>109</width>
     <wrap_words>false</wrap_words>
     <wuid>60e4f92d:16424156f07:-68ee</wuid>
-    <x>647</x>
-    <y>141</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="false" hook_all="false">
-      <action type="WRITE_PV">
-        <pv_name>$(P)$(R)NumberCodes</pv_name>
-        <value>0</value>
-        <timeout>10</timeout>
-        <confirm_message></confirm_message>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="115" green="223" blue="255" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <height>20</height>
-    <image></image>
-    <name>Action Button</name>
-    <push_action_index>0</push_action_index>
-    <pv_name>$(P)$(R)NumberCodes</pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <style>0</style>
-    <text>Reset to 0</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <visible>true</visible>
-    <widget_type>Action Button</widget_type>
-    <width>100</width>
-    <wuid>60e4f92d:16424156f07:-68b9</wuid>
-    <x>540</x>
-    <y>139</y>
+    <x>624</x>
+    <y>129</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -1258,7 +1204,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1298,7 +1244,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1349,7 +1295,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <fill_level>0.0</fill_level>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1399,7 +1345,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1448,7 +1394,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1488,7 +1434,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1531,7 +1477,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1580,7 +1526,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1623,7 +1569,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1672,7 +1618,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1715,7 +1661,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1768,7 +1714,7 @@ $(pv_value)</tooltip>
     <confirm_message></confirm_message>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1824,7 +1770,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1873,7 +1819,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1913,7 +1859,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1957,7 +1903,7 @@ $(pv_value)</tooltip>
     <confirm_message></confirm_message>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2013,7 +1959,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2062,7 +2008,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2106,7 +2052,7 @@ $(pv_value)</tooltip>
     <confirm_message></confirm_message>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2162,7 +2108,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2211,7 +2157,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2254,7 +2200,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2306,7 +2252,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2355,7 +2301,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2395,7 +2341,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2438,7 +2384,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2490,7 +2436,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2539,7 +2485,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2582,7 +2528,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2631,7 +2577,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2674,7 +2620,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2726,7 +2672,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2775,7 +2721,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2818,7 +2764,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2867,7 +2813,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2910,7 +2856,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -2959,7 +2905,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3002,7 +2948,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3051,7 +2997,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3091,7 +3037,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3134,7 +3080,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3183,7 +3129,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3226,7 +3172,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3285,7 +3231,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3339,7 +3285,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3383,7 +3329,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3426,7 +3372,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3479,7 +3425,7 @@ $(pv_value)</tooltip>
     <confirm_message></confirm_message>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3535,13 +3481,13 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="10" green="0" blue="184" />
     </foreground_color>
-    <format_type>9</format_type>
+    <format_type>7</format_type>
     <height>18</height>
     <horizontal_alignment>0</horizontal_alignment>
     <name>Text Update_35</name>
@@ -3584,7 +3530,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3624,7 +3570,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3685,7 +3631,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3727,7 +3673,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3769,7 +3715,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3814,7 +3760,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3863,7 +3809,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -3913,7 +3859,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -3959,7 +3905,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -4003,7 +3949,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -4029,8 +3975,8 @@ $(pv_value)</tooltip>
     <widget_type>Menu Button</widget_type>
     <width>100</width>
     <wuid>45402fea:16441f346eb:-6590</wuid>
-    <x>541</x>
-    <y>174</y>
+    <x>582</x>
+    <y>172</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -4045,7 +3991,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -4060,7 +4006,7 @@ $(pv_value)</tooltip>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts />
-    <text>Inverted Barcode</text>
+    <text>Barcode Variant</text>
     <tooltip></tooltip>
     <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
@@ -4069,8 +4015,8 @@ $(pv_value)</tooltip>
     <width>140</width>
     <wrap_words>false</wrap_words>
     <wuid>45402fea:16441f346eb:-6588</wuid>
-    <x>392</x>
-    <y>173</y>
+    <x>426</x>
+    <y>172</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
     <actions hook="false" hook_all="false">
@@ -4097,7 +4043,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -4139,7 +4085,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      <fontdata fontName="Sans" height="11" style="0" />
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -4165,5 +4111,49 @@ $(pv_value)</tooltip>
     <wuid>563a3e58:1644d1293d6:-78ff</wuid>
     <x>467</x>
     <y>415</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
+    <actions_from_pv>true</actions_from_pv>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="115" green="223" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>6</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Sans" height="9" style="0">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <label></label>
+    <name>Menu Button_6</name>
+    <pv_name>$(P)$(R)CodeCorners</pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_down_arrow>false</show_down_arrow>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <widget_type>Menu Button</widget_type>
+    <width>100</width>
+    <wuid>-6a1f15b5:167d223b609:-5920</wuid>
+    <x>639</x>
+    <y>229</y>
   </widget>
 </display>
