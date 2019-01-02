@@ -41,9 +41,9 @@ ifdef ADPLUGINBAR
   PROD_LIBS	  += NDPluginBar
   ifdef OPENCV_LIB
     opencv_core_DIR +=$(OPENCV_LIB)
-    PROD_LIBS       += opencv_core opencv_imgproc opencv_highgui zbar
+    PROD_LIBS       += opencv_core opencv_imgproc opencv_highgui opencv_imgcodecs zbar
   else
-    PROD_SYS_LIBS   += opencv_core opencv_imgproc opencv_highgui zbar
+    PROD_SYS_LIBS   += opencv_core opencv_imgproc opencv_highgui opencv_imgcodecs zbar
   endif
 endif
 ```
