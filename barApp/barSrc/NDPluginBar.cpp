@@ -168,7 +168,7 @@ asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
 
 	size_t dataSize = img.step[0]*img.rows;
 
-	printf("%d, %d\n", dataSize, arrayInfo.totalBytes);
+	//printf("%d, %d\n", dataSize, arrayInfo.totalBytes);
 
 	if(dataSize != arrayInfo.totalBytes){
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, invalid array size\n", driverName, functionName);
@@ -287,7 +287,7 @@ Image NDPluginBar::scan_image(Mat &img){
  * @return: success if set correctly otherwise error
  */
 asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter){
-	const char* functionName = "clear_unused_barcode_pvs";
+	//const char* functionName = "clear_unused_barcode_pvs";
 	int i;
 	for(i = counter; i< NUM_CODES; i++){
 		asynStatus s1 = setStringParam(barcodeMessagePVs[i], "No Barcode Found");
@@ -311,7 +311,7 @@ asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter){
  */
 asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 
-	static const char* functionName = "decode_bar_codes";
+	// static const char* functionName = "decode_bar_codes";
 
 	// first scan the image for barcodes
 	Image scannedImage = scan_image(img);

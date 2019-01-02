@@ -132,7 +132,7 @@ class NDPluginBar : public NDPluginDriver {
 		// vector that stores currently discovered barcodes
 		vector<bar_QR_code> codes_in_image;
 		asynStatus clearPreviousCodes();
-		asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter);
+		asynStatus clear_unused_barcode_pvs(int counter);
 
 		// functions called on plugin initialization
 		asynStatus initPVArrays();
