@@ -25,7 +25,7 @@ using namespace zbar;
 //version numbers
 #define BAR_VERSION      	1
 #define BAR_REVISION     	1
-#define BAR_MODIFICATION 	2
+#define BAR_MODIFICATION 	4
 
 // Number of barcodes supported at one time
 #define NUM_CODES			5
@@ -43,6 +43,7 @@ using namespace zbar;
 #define NDPluginBarBarcodeMessage5String 	"BARCODE_MESSAGE5" 		//asynOctet
 #define NDPluginBarBarcodeType5String 		"BARCODE_TYPE5" 		//asynOctet
 #define NDPluginBarNumberCodesString 		"NUMBER_CODES" 			//asynInt32
+#define NDPluginBarCodeCornersString		"CODE_CORNERS"			//asynInt32
 #define NDPluginBarInvertedBarcodeString 	"INVERTED_CODE" 		//asynInt32
 #define NDPluginBarUpperLeftXString 		"UPPER_LEFT_X" 			//asynInt32
 #define NDPluginBarUpperRightXString 		"UPPER_RIGHT_X" 		//asynInt32
@@ -95,6 +96,8 @@ class NDPluginBar : public NDPluginDriver {
 
 		//number of codes found
 		int NDPluginBarNumberCodes;
+
+		int NDPluginBarCodeCorners;
 
 		//white on black/ black on white
 		int NDPluginBarInvertedBarcode;

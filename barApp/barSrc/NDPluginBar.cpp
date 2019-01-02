@@ -469,33 +469,34 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 	char versionString[25];
 
 	//basic barcode parameters 1-5
-	createParam(NDPluginBarBarcodeMessage1String, asynParamOctet, &NDPluginBarBarcodeMessage1);
-	createParam(NDPluginBarBarcodeType1String, asynParamOctet, &NDPluginBarBarcodeType1);
-	createParam(NDPluginBarBarcodeMessage2String, asynParamOctet, &NDPluginBarBarcodeMessage2);
-	createParam(NDPluginBarBarcodeType2String, asynParamOctet, &NDPluginBarBarcodeType2);
-	createParam(NDPluginBarBarcodeMessage3String, asynParamOctet, &NDPluginBarBarcodeMessage3);
-	createParam(NDPluginBarBarcodeType3String, asynParamOctet, &NDPluginBarBarcodeType3);
-	createParam(NDPluginBarBarcodeMessage4String, asynParamOctet, &NDPluginBarBarcodeMessage4);
-	createParam(NDPluginBarBarcodeType4String, asynParamOctet, &NDPluginBarBarcodeType4);
-	createParam(NDPluginBarBarcodeMessage5String, asynParamOctet, &NDPluginBarBarcodeMessage5);
-	createParam(NDPluginBarBarcodeType5String, asynParamOctet, &NDPluginBarBarcodeType5);
+	createParam(NDPluginBarBarcodeMessage1String, 	asynParamOctet, 	&NDPluginBarBarcodeMessage1);
+	createParam(NDPluginBarBarcodeType1String, 		asynParamOctet, 	&NDPluginBarBarcodeType1);
+	createParam(NDPluginBarBarcodeMessage2String, 	asynParamOctet, 	&NDPluginBarBarcodeMessage2);
+	createParam(NDPluginBarBarcodeType2String, 		asynParamOctet, 	&NDPluginBarBarcodeType2);
+	createParam(NDPluginBarBarcodeMessage3String, 	asynParamOctet, 	&NDPluginBarBarcodeMessage3);
+	createParam(NDPluginBarBarcodeType3String, 		asynParamOctet, 	&NDPluginBarBarcodeType3);
+	createParam(NDPluginBarBarcodeMessage4String, 	asynParamOctet, 	&NDPluginBarBarcodeMessage4);
+	createParam(NDPluginBarBarcodeType4String, 		asynParamOctet, 	&NDPluginBarBarcodeType4);
+	createParam(NDPluginBarBarcodeMessage5String, 	asynParamOctet, 	&NDPluginBarBarcodeMessage5);
+	createParam(NDPluginBarBarcodeType5String, 		asynParamOctet, 	&NDPluginBarBarcodeType5);
 
 
 	//common params
-	createParam(NDPluginBarNumberCodesString, asynParamInt32, &NDPluginBarNumberCodes);
-	createParam(NDPluginBarInvertedBarcodeString, asynParamInt32, &NDPluginBarInvertedBarcode);
+	createParam(NDPluginBarNumberCodesString, 		asynParamInt32, 	&NDPluginBarNumberCodes);
+	createParam(NDPluginBarCodeCornersString, 		asynParamInt32, 	&NDPluginBarCodeCorners);
+	createParam(NDPluginBarInvertedBarcodeString, 	asynParamInt32, 	&NDPluginBarInvertedBarcode);
 
 	//x coordinates
-	createParam(NDPluginBarUpperLeftXString, asynParamInt32, &NDPluginBarUpperLeftX);
-	createParam(NDPluginBarUpperRightXString, asynParamInt32, &NDPluginBarUpperRightX);
-	createParam(NDPluginBarLowerLeftXString, asynParamInt32, &NDPluginBarLowerLeftX);
-	createParam(NDPluginBarLowerRightXString, asynParamInt32, &NDPluginBarLowerRightX);
+	createParam(NDPluginBarUpperLeftXString, 		asynParamInt32, 	&NDPluginBarUpperLeftX);
+	createParam(NDPluginBarUpperRightXString, 		asynParamInt32, 	&NDPluginBarUpperRightX);
+	createParam(NDPluginBarLowerLeftXString, 		asynParamInt32, 	&NDPluginBarLowerLeftX);
+	createParam(NDPluginBarLowerRightXString, 		asynParamInt32, 	&NDPluginBarLowerRightX);
 
 	//y coordinates
-	createParam(NDPluginBarUpperLeftYString, asynParamInt32, &NDPluginBarUpperLeftY);
-	createParam(NDPluginBarUpperRightYString, asynParamInt32, &NDPluginBarUpperRightY);
-	createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
-	createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
+	createParam(NDPluginBarUpperLeftYString, 		asynParamInt32, 	&NDPluginBarUpperLeftY);
+	createParam(NDPluginBarUpperRightYString, 		asynParamInt32, 	&NDPluginBarUpperRightY);
+	createParam(NDPluginBarLowerLeftYString, 		asynParamInt32, 	&NDPluginBarLowerLeftY);
+	createParam(NDPluginBarLowerRightYString, 		asynParamInt32, 	&NDPluginBarLowerRightY);
 
 	initPVArrays();
 
