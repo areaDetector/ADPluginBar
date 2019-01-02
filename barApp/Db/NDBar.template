@@ -20,10 +20,12 @@ include "NDPluginBase.template"
 # and the barcode type.
 ##################################################################
 
-record(stringin, "$(P)$(R)BarcodeMessage1_RBV"){
+record(waveform, "$(P)$(R)BarcodeMessage1_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE1")
-        field(VAL, "No Barcode Found")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -31,14 +33,16 @@ record(stringin, "$(P)$(R)BarcodeType1_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE1")
-        field(VAL, "None")
+    field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
-record(stringin, "$(P)$(R)BarcodeMessage2_RBV"){
+record(waveform, "$(P)$(R)BarcodeMessage2_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE2")
-        field(VAL, "No Barcode Found")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -46,14 +50,16 @@ record(stringin, "$(P)$(R)BarcodeType2_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE2")
-        field(VAL, "None")
+    field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
-record(stringin, "$(P)$(R)BarcodeMessage3_RBV"){
+record(waveform, "$(P)$(R)BarcodeMessage3_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE3")
-        field(VAL, "No Barcode Found")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -61,14 +67,16 @@ record(stringin, "$(P)$(R)BarcodeType3_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE3")
-        field(VAL, "None")
+    field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
-record(stringin, "$(P)$(R)BarcodeMessage4_RBV"){
+record(waveform, "$(P)$(R)BarcodeMessage4_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE4")
-        field(VAL, "No Barcode Found")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -76,14 +84,16 @@ record(stringin, "$(P)$(R)BarcodeType4_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE4")
-        field(VAL, "None")
+    field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
-record(stringin, "$(P)$(R)BarcodeMessage5_RBV"){
+record(waveform, "$(P)$(R)BarcodeMessage5_RBV"){
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE5")
-        field(VAL, "No Barcode Found")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -91,7 +101,7 @@ record(stringin, "$(P)$(R)BarcodeType5_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE5")
-        field(VAL, "None")
+    field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
@@ -111,6 +121,46 @@ record(ai, "$(P)$(R)NumberCodes_RBV")
 {
 	field(DTYP, "asynInt32")
 	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUMBER_CODES")
+	field(SCAN, "I/O Intr")
+}
+
+
+#####################################################################
+# Corner selection - choose which code's corners to track
+#####################################################################
+
+record(mbbo, "$(P)$(R)CodeCorners"){
+	field(PINI, "YES")
+	field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS)
+	field(ZRST, "Code 1")
+	field(ZRVL, "0")
+	field(ONST, "Code 2")
+	field(ONVL, "1")
+	field(TWST, "Code 3")
+	field(TWVL, "2")
+	field(THST, "Code 4")
+	field(THVL, "3")
+	field(FRST, "Code 5")
+	field(FRVL, "4")
+	field(VAL, "0")
+	field(autosaveFields, "VAL")
+}
+
+record(mbbo, "$(P)$(R)CodeCorners_RBV"){
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS)
+	field(ZRST, "Code 1")
+	field(ZRVL, "0")
+	field(ONST, "Code 2")
+	field(ONVL, "1")
+	field(TWST, "Code 3")
+	field(TWVL, "2")
+	field(THST, "Code 4")
+	field(THVL, "3")
+	field(FRST, "Code 5")
+	field(FRVL, "4")
+	field(VAL, "0")
 	field(SCAN, "I/O Intr")
 }
 
