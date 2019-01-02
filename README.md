@@ -17,9 +17,9 @@ respective repositories from github, or if on a debin/ubuntu system, slightly ol
 be downloaded using the package manager with the following commands:
 
 ```
-sudo apt-get install libcv-dev libcvaux-dev libhighgui-dev 
-sudo apt-get install libopencv-contrib-dev
-sudo apt-get install libzbar-dev libzbarqt-dev libzbargtk-dev
+sudo apt install libopencv-dev 
+sudo apt install libopencv-contrib-dev
+sudo apt install libzbar-dev
 ```
 
 In addition, the numbered versions of these packages may be needed. For example, on the debian 8 machine
