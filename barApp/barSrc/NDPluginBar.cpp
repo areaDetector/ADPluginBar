@@ -168,6 +168,8 @@ asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
 
 	size_t dataSize = img.step[0]*img.rows;
 
+	printf("%d, %d\n", dataSize, arrayInfo.totalBytes);
+
 	if(dataSize != arrayInfo.totalBytes){
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, invalid array size\n", driverName, functionName);
 		img.release();
@@ -178,35 +180,13 @@ asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
 	pScratch->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
     pScratch->pAttributeList->add("DataType", "Data Type", NDAttrInt32, &dataType);
     getAttributes(pScratch->pAttributeList);
-    callParamCallbacks();
+	doCallbacksGenericPointer(pScratch, NDArrayData, 0);
+	//release the array
+	pScratch->release();
 	// now that data is copied to NDArray, we don't need mat anymore
 	img.release();
 	return asynSuccess;
 }
-
-
-/**
- * Function responsible for checking if discovered bar code is a repeat
- * This is to avoid plugin re-detecting the same barcodes over and over
- *
- * @params[in]: data -> data in discovered bar code
- * @return: true if data is the same, false otherwise
- */
-bool NDPluginBar::check_past_code(string data){
-	string past_code1, past_code2, past_code3, past_code4, past_code5;
-	getStringParam(NDPluginBarBarcodeMessage1, past_code1);
-	if(data == past_code1) return true;
-	getStringParam(NDPluginBarBarcodeMessage2, past_code2);
-	if(data == past_code2) return true;
-	getStringParam(NDPluginBarBarcodeMessage3, past_code3);
-	if(data == past_code3) return true;
-	getStringParam(NDPluginBarBarcodeMessage4, past_code4);
-	if(data == past_code4) return true;
-	getStringParam(NDPluginBarBarcodeMessage5, past_code5);
-	if(data == past_code5) return true;
-	else return false;
-}
-
 
 
 /**
@@ -286,7 +266,7 @@ asynStatus NDPluginBar::updateCorners(bar_QR_code &discovered){
  * @params[in]: img -> input image in Mat format
  * @return: Image -> new image object with scanned symbols
  */
-Image scan_image(Mat &img){
+Image NDPluginBar::scan_image(Mat &img){
 
 	//initialize the image and the scanner object
 	ImageScanner zbarScanner;
@@ -297,6 +277,24 @@ Image scan_image(Mat &img){
 	zbarScanner.scan(scannedImage);
 
 	return scannedImage;
+}
+
+
+/**
+ * Function that clears any non-overwritten barcode PVs between array callbacks
+ * 
+ * @params[in]: counter -> number of codes detected in the new image
+ * @return: success if set correctly otherwise error
+ */
+asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter){
+	const char* functionName = "clear_unused_barcode_pvs";
+	int i;
+	for(i = counter; i< NUM_CODES; i++){
+		asynStatus s1 = setStringParam(barcodeMessagePVs[i], "No Barcode Found");
+		asynStatus s2 = setStringParam(barcodeTypePVs[i], "None");
+		if(s1 == asynError || s2 == asynError) return asynError;
+	}
+	return asynSuccess;
 }
 
 
@@ -321,6 +319,9 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 	//counter for number of codes in current image
 	int counter = 0;
 
+	// remove any previously detected barcodes
+	clearPreviousCodes();
+
 	for(Image::SymbolIterator symbol = scannedImage.symbol_begin(); symbol!=scannedImage.symbol_end();++symbol){
 
 		//get information from detected bar code and populate a bar_QR_code struct
@@ -328,42 +329,34 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 		barQR.type = symbol->get_type_name();
 		barQR.data = symbol->get_data();
 
-		//check to see if code has been detected already
-		bool check = check_past_code(barQR.data);
-		if(check == true){
-			asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Has detected the same barcode or QR code\n",  driverName, functionName);
-			return asynError;
+		//print information
+		//cout << "Type: " << barQR.type << endl;
+		//cout << "Data: " << barQR.data << endl << endl;
+
+		//set PVs
+		setStringParam(barcodeTypePVs[counter], barQR.type);
+		setStringParam(barcodeMessagePVs[counter], barQR.data);
+		//iterate the number of discovered codes
+		int num_codes = 0;
+		getIntegerParam(NDPluginBarNumberCodes, &num_codes);
+		num_codes = num_codes+1;
+		setIntegerParam(NDPluginBarNumberCodes, num_codes);
+		//only the first code has its coordinates saved
+		if(counter == 0){
+			//push location data
+			push_corners(barQR, symbol, 1);
 		}
 		else{
-
-			clearPreviousCodes();
-
-			//print information
-			cout << "Type: " << barQR.type << endl;
-			cout << "Data: " << barQR.data << endl << endl;
-
-			//set PVs
-			setStringParam(barcodeTypePVs[counter], barQR.type);
-			setStringParam(barcodeMessagePVs[counter], barQR.data);
-
-			//iterate the number of discovered codes
-			int num_codes = 0;
-			getIntegerParam(NDPluginBarNumberCodes, &num_codes);
-			num_codes = num_codes+1;
-			setIntegerParam(NDPluginBarNumberCodes, num_codes);
-
-			//only the first code has its coordinates saved
-			if(counter == 0){
-				//push location data
-				push_corners(barQR, symbol, 1);
-			}
-			else{
-				push_corners(barQR, symbol, 0);
-			}
-			codes_in_image.push_back(barQR);
+			push_corners(barQR, symbol, 0);
 		}
+		codes_in_image.push_back(barQR);
+		
 		counter++;
 	}
+
+	// clear any old barcode PVs that were not overwritten
+	clear_unused_barcode_pvs(counter);
+
 	return asynSuccess;
 }
 
@@ -390,7 +383,7 @@ asynStatus NDPluginBar::show_bar_codes(Mat &img){
 			else outside = barPoints;
 			int n = outside.size();
 			for(int j = 0; j<n; j++){
-				line(img, outside[j], outside[(j+1)%n], Scalar(255,0,0),3);
+				line(img, outside[j], outside[(j+1)%n], Scalar(0,0,255),3);
 			}
 		}
 		return asynSuccess;
@@ -445,19 +438,16 @@ void NDPluginBar::processCallbacks(NDArray *pArray){
 	else{
 		status = decode_bar_codes(img);
 	}
-
 	if(status != asynError) status = show_bar_codes(img);
 
 	this->lock();
 
 	status = mat2NDArray(pScratch, img);
+
 	if(status == asynError){
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, image not processed correctly\n", driverName, functionName);
 		return;
 	}
-	doCallbacksGenericPointer(pScratch, NDArrayData, 0);
-	//release the array
-	pScratch->release();
 
 	callParamCallbacks();
 
