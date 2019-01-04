@@ -5,7 +5,8 @@
  * Author: Jakub Wlodek
  * Co-author: Kazimier Gofron
  *
- * Created December 5, 2017
+ * Created on: December 5, 2017
+ * Last Updated: January 4, 2019
 */
 
 #ifndef NDPluginBar_H
@@ -23,37 +24,40 @@ using namespace zbar;
 #include "NDPluginDriver.h"
 
 //version numbers
-#define BAR_VERSION      1
-#define BAR_REVISION     1
-#define BAR_MODIFICATION 0
+#define BAR_VERSION      	2
+#define BAR_REVISION     	0
+#define BAR_MODIFICATION 	0
+
+// Number of barcodes supported at one time
+#define NUM_CODES			5
+
+
+/* Here I will define all of the output data types once the database is written */
+#define NDPluginBarBarcodeMessage1String 	"BARCODE_MESSAGE1" 		//asynOctet
+#define NDPluginBarBarcodeType1String 		"BARCODE_TYPE1" 		//asynOctet
+#define NDPluginBarBarcodeMessage2String 	"BARCODE_MESSAGE2" 		//asynOctet
+#define NDPluginBarBarcodeType2String 		"BARCODE_TYPE2" 		//asynOctet
+#define NDPluginBarBarcodeMessage3String 	"BARCODE_MESSAGE3" 		//asynOctet
+#define NDPluginBarBarcodeType3String 		"BARCODE_TYPE3" 		//asynOctet
+#define NDPluginBarBarcodeMessage4String 	"BARCODE_MESSAGE4" 		//asynOctet
+#define NDPluginBarBarcodeType4String 		"BARCODE_TYPE4" 		//asynOctet
+#define NDPluginBarBarcodeMessage5String 	"BARCODE_MESSAGE5" 		//asynOctet
+#define NDPluginBarBarcodeType5String 		"BARCODE_TYPE5" 		//asynOctet
+#define NDPluginBarNumberCodesString 		"NUMBER_CODES" 			//asynInt32
+#define NDPluginBarCodeCornersString		"CODE_CORNERS"			//asynInt32
+#define NDPluginBarInvertedBarcodeString 	"INVERTED_CODE" 		//asynInt32
+#define NDPluginBarUpperLeftXString 		"UPPER_LEFT_X" 			//asynInt32
+#define NDPluginBarUpperRightXString 		"UPPER_RIGHT_X" 		//asynInt32
+#define NDPluginBarLowerLeftXString 		"LOWER_LEFT_X" 			//asynInt32
+#define NDPluginBarLowerRightXString 		"LOWER_RIGHT_X" 		//asynInt32
+#define NDPluginBarUpperLeftYString 		"UPPER_LEFT_Y" 			//asynInt32
+#define NDPluginBarUpperRightYString 		"UPPER_RIGHT_Y" 		//asynInt32
+#define NDPluginBarLowerLeftYString 		"LOWER_LEFT_Y" 			//asynInt32
+#define NDPluginBarLowerRightYString 		"LOWER_RIGHT_Y" 		//asynInt32
 
 
 
-//Here I will define all of the output data types once the database is written
-#define NDPluginBarBarcodeMessage1String "BARCODE_MESSAGE1" //asynOctet
-#define NDPluginBarBarcodeType1String "BARCODE_TYPE1" //asynOctet
-#define NDPluginBarBarcodeMessage2String "BARCODE_MESSAGE2" //asynOctet
-#define NDPluginBarBarcodeType2String "BARCODE_TYPE2" //asynOctet
-#define NDPluginBarBarcodeMessage3String "BARCODE_MESSAGE3" //asynOctet
-#define NDPluginBarBarcodeType3String "BARCODE_TYPE3" //asynOctet
-#define NDPluginBarBarcodeMessage4String "BARCODE_MESSAGE4" //asynOctet
-#define NDPluginBarBarcodeType4String "BARCODE_TYPE4" //asynOctet
-#define NDPluginBarBarcodeMessage5String "BARCODE_MESSAGE5" //asynOctet
-#define NDPluginBarBarcodeType5String "BARCODE_TYPE5" //asynOctet
-#define NDPluginBarNumberCodesString "NUMBER_CODES" //asynInt32
-#define NDPluginBarInvertedBarcodeString "INVERTED_CODE" //asynInt32
-#define NDPluginBarUpperLeftXString "UPPER_LEFT_X" //asynInt32
-#define NDPluginBarUpperRightXString "UPPER_RIGHT_X" //asynInt32
-#define NDPluginBarLowerLeftXString "LOWER_LEFT_X" //asynInt32
-#define NDPluginBarLowerRightXString "LOWER_RIGHT_X" //asynInt32
-#define NDPluginBarUpperLeftYString "UPPER_LEFT_Y" //asynInt32
-#define NDPluginBarUpperRightYString "UPPER_RIGHT_Y" //asynInt32
-#define NDPluginBarLowerLeftYString "LOWER_LEFT_Y" //asynInt32
-#define NDPluginBarLowerRightYString "LOWER_RIGHT_Y" //asynInt32
-
-
-
-//structure that contains information about the bar/QR code
+/* structure that contains information about the bar/QR code */
 typedef struct{
 	string type;
 	string data;
@@ -62,14 +66,18 @@ typedef struct{
 
 
 
-//class that does barcode readings
+/* class that does barcode readings */
 class NDPluginBar : public NDPluginDriver {
 	public:
 		NDPluginBar(const char *portName, int queueSize, int blockingCallbacks,
 			const char* NDArrayPort, int NDArrayAddr, int maxBuffers,
 			size_t maxMemory, int priority, int stackSize);
 
+		//~NDPluginBar();
+
 		void processCallbacks(NDArray *pArray);
+
+		virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
 
 	protected:
 
@@ -77,6 +85,7 @@ class NDPluginBar : public NDPluginDriver {
 
 		//message contained in bar code and its type
 		int NDPluginBarBarcodeMessage1;
+		#define ND_BAR_FIRST_PARAM	NDPluginBarBarcodeMessage1
 		int NDPluginBarBarcodeType1;
 
 		int NDPluginBarBarcodeMessage2;
@@ -93,6 +102,8 @@ class NDPluginBar : public NDPluginDriver {
 
 		//number of codes found
 		int NDPluginBarNumberCodes;
+
+		int NDPluginBarCodeCorners;
 
 		//white on black/ black on white
 		int NDPluginBarInvertedBarcode;
@@ -120,24 +131,49 @@ class NDPluginBar : public NDPluginDriver {
 
 		//lower right pixel of found bar code
 		int NDPluginBarLowerRightY;
+		#define ND_BAR_LAST_PARAM NDPluginBarLowerRightY
 
 	private:
 
-		//function that does the decoding
-		void decode_bar_code(Mat &im, vector<bar_QR_code> &codes_in_image);
+		// arrays that hold indexes of PVs for messages and types
+		int barcodeMessagePVs[NUM_CODES];
+		int barcodeTypePVs[NUM_CODES];
+
+		// arrays that hold indexes for PVs for corners
+		int cornerXPVs[4];
+		int cornerYPVs[4];
+
+		// vector that stores currently discovered barcodes
+		vector<bar_QR_code> codes_in_image;
+		asynStatus clearPreviousCodes();
+		asynStatus clear_unused_barcode_pvs(int counter);
+
+		// functions called on plugin initialization
+		asynStatus initPVArrays();
+
+		// image type conversion functions
+		void printCVError(cv::Exception &e, const char* functionName);
+		asynStatus ndArray2Mat(NDArray* pArray, NDArrayInfo* arrayInfo, Mat &img);
+		asynStatus mat2NDArray(NDArray* pScratch, Mat &img);
+
+
+		// Decoding functions
+		Image scan_image(Mat &img);
+		asynStatus decode_bar_codes(Mat &img);
+
 
 		//function that displays detected bar codes
-		void show_bar_codes(Mat &im, vector<bar_QR_code> &codes_in_image);
-
-		//function that checks for barcode repetition
-		bool check_past_code(string data);
+		asynStatus show_bar_codes(Mat &img);
 
 		//function that allows for reading inverted barcodes
-		Mat fix_inverted(Mat &im);
+		asynStatus fix_inverted(Mat &img);
 
 		//function that pushes barcode coordinate data to PVs
-		void push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
+		asynStatus push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
+		asynStatus updateCorners(bar_QR_code &discovered);
 
 };
+
+#define NUM_BAR_PARAMS ((int)(&ND_BAR_LAST_PARAM - &ND_BAR_FIRST_PARAM + 1))
 
 #endif
