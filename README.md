@@ -23,7 +23,7 @@ sudo apt install libzbar-dev
 ```
 
 In addition, the numbered versions of these packages may be needed. For example, on the debian 8 machine
-this was tested on, libcv2.4 was used.
+this was tested on, libopencv2.4 was used.
 
 It is also possible to build both opencv and zbar from source, links to each github are placed in
 the github.io website linked at the top of this repository.
@@ -115,9 +115,7 @@ You have now installed the ADPluginBar Plugin.
 ### Usage
 
 To use ADPluginBar with CSS, place the provided .opi screens into your CSS setup, and link to it
-appropriately. It requires a mono image, so set your camera to mono, and enable the plugin.
-When a barcode is detected, the plugin will populate the appropriate PVs, and display an image with 
-a bounding box representing where in the image it identified a barcode.
+appropriately. The plugin supports 8 and 16 bit images in Mono or RGB formats. Inverted barcodes are supported as well but only in 8 bit formats. In order to view detected barcodes live, you may use any EPICS image viewer such as ImageJ, NDPluginStdArrays, or NDPluginPva, by setting the NDArrayPort to BAR1, or whichever port the plugin was assigned. This will display the image that the plugin processes, along with a blue bounding box around barcodes detected. 
 
 ### Process Variables Supported
 
@@ -125,7 +123,9 @@ PV		|  Comment
 ----------------|---------------
 BarcodeMessage(1-5)  |  The message contained within the decoded barcode
 BarcodeType(1-5)     |  The type of the decoded barcode i.e. CODE-128, QR-Code etc.
-NumberCodes     |  Live count of the number of decoded bar codes
+NumberCodes     |  Live count of the number of decoded bar codes in the current image
+InvertedBarcode | Toggle between processing standard and inverted barcodes
+CodeCorners     | Allows for selecting which detected code's corners to track in corner PVs
 UpperLeftX	|  X-coordinate of the upper left corner of the detected barcode
 UpperRightX	|  X-coordinate of the upper right corner of the detected barcode
 LowerLeftX	|  X-coordinate of the lower left corner of the detected barcode
@@ -136,5 +136,13 @@ LowerLeftY	|  Y-coordinate of the lower left corner of the detected barcode
 LowerRightY	|  Y-coordinate of the lower right corner of the detected barcode
 
 
-Note: Only the corners of the first detected barcode are stored in PVs. However,
-if the image is reset, and different barcodes are found, these will be replaced.
+### Known limitations
+
+There are some limitiations to the current release of the NDPluginBar plugin:
+
+* Inverted barcodes only support 8-bit images
+* Processing time can range between 25 msec and 100 msec, meaning that fast cameras with large images need to be set to a low framerate to avoid overbuffering the plugin. Ideally, a 5 FPS feed would avoid such issues. When testing a 30 FPS feed on an 800x600 8-bit image, when multiple barcodes were on screen, dropped frames did occur.
+* When camera is not stable, barcode detection "flickers" meaning that it detects the barcode then loses it then detects it again. This problem is mitigated by a stable camera and a higher resolution.
+* When viewing the live barcode detection feed, one dimensional barcodes are generally not read around all 4 corners like QR codes, resulting in a somewhat inaccurate bounding box
+
+For any other issues or limitations, please feel free to submit an issue on the ADPluginBar github page: https://github.com/jwlodek/ADPluginBar

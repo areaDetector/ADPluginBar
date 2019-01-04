@@ -6,10 +6,9 @@ Dependancies: EPICS base, synApps, OpenCV, Zbar
 Barcode reader with support for EPICS and area detector integration.
 Adding the provided CSS screen to your setup will allow enabling the plugin.
 
-Currently, only mono images are supported. When the plugin is enabled, it checks
+ When the plugin is enabled, it checks
 the image given for a barcode or QR code. If one is found, it decodes it, then
-calculates the positions of the 4 corners of the code. Finally, it increments a counter
-that stores the number of bar codes detected. Further details in README.md
+calculates the positions of the 4 corners of the code. Further details in README.md
 
 
 The versions of EPICS base, asyn, and other synApps modules used for each release can be obtained from 
@@ -19,6 +18,22 @@ files respectively, in the configure/ directory of the appropriate release of th
 
 Release Notes
 =============
+R2-0 (???-January-2018)
+----
+* Features Added:
+	* Corners can now be displayed for any of the 5 barcodes via a PV toggle
+	* Number Codes now lists the number of codes in the image not the total number of codes
+	* Passing the ADPluginBar Array Port to an EPICS Viewer allows for live display of detected barcodes and QR codes
+	* Support for both 8 bit and 16 bit images
+	* Added support for input of RGB images as opposed to only Mono images
+	* Barcode Message PVs changed to waveforms to increase max character count to 256
+* Bug Fixes/Code Refactoring:
+	* Fixed issue where plugin would freeze in certain situations where codes were repeated.
+	* Removed redundant functions, split up large functions into more compact pieces
+	* Improved documentation for all functions
+* Future Plans:
+	* Add support for automatic image saving when barcodes detected
+	* Support for databases like MySQL and MongoDB
 
 R1-1 (27-June-2018)
 ----

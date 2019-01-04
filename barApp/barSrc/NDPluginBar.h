@@ -5,7 +5,8 @@
  * Author: Jakub Wlodek
  * Co-author: Kazimier Gofron
  *
- * Created December 5, 2017
+ * Created on: December 5, 2017
+ * Last Updated: January 4, 2019
 */
 
 #ifndef NDPluginBar_H
@@ -25,7 +26,7 @@ using namespace zbar;
 //version numbers
 #define BAR_VERSION      	1
 #define BAR_REVISION     	1
-#define BAR_MODIFICATION 	4
+#define BAR_MODIFICATION 	6
 
 // Number of barcodes supported at one time
 #define NUM_CODES			5

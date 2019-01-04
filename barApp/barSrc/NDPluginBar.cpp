@@ -8,7 +8,7 @@
  * Author: Jakub Wlodek
  *
  * Created on: December 3, 2017
- * Last updated: December 31, 2018
+ * Last updated: January 4, 2019
  *
 */
 
@@ -43,6 +43,7 @@ static const char *driverName="NDPluginBar";
 // Functions called at init
 //------------------------------------------------------
 
+
 /* Function that places PV indexes into arrays for easier iteration */
 asynStatus NDPluginBar::initPVArrays(){
 	barcodeMessagePVs[0] = NDPluginBarBarcodeMessage1;
@@ -72,7 +73,7 @@ asynStatus NDPluginBar::initPVArrays(){
 
 
 //------------------------------------------------------
-// Image type conversion functions
+// Utility functions for printing errors and for clearing previous codes
 //------------------------------------------------------
 
 
@@ -94,8 +95,18 @@ asynStatus NDPluginBar::clearPreviousCodes(){
 }
 
 
+//------------------------------------------------------
+// Image type conversion functions
+//------------------------------------------------------
+
+
 /**
- * Function that converts an NDArray into a Mat object
+ * Function that converts an NDArray into a Mat object.
+ * Currently supports NDUInt8, NDInt8, NDUInt16, NDInt16 data types, and either mono or RGB 
+ * Image types
+ * 
+ * If the image is in RGB, it is converted to grayscale before it is passed to the plugin, because
+ * zbar requires a grayscale image for detection
  * 
  * @params[in]: pArray	-> pointer to an NDArray
  * @params[in]: arrayInfo -> pointer to info about NDArray
@@ -107,7 +118,7 @@ asynStatus NDPluginBar::ndArray2Mat(NDArray* pArray, NDArrayInfo *arrayInfo, Mat
 	// data type and num dimensions used during conversion
 	NDDataType_t dataType = pArray->dataType;
 	int ndims = pArray->ndims;
-
+	// convert based on color depth and data type
 	switch(dataType){
 		case NDUInt8:
 			if(ndims == 2) img = Mat(arrayInfo->ySize, arrayInfo->xSize, CV_8UC1, pArray->pData);
@@ -145,7 +156,8 @@ asynStatus NDPluginBar::ndArray2Mat(NDArray* pArray, NDArrayInfo *arrayInfo, Mat
 /**
  * Function that converts Mat back into NDArray. This function is guaranteed to 
  * have either a 8 bit or 16 bit color image, because the bounding boxes drawn
- * around the detected barcodes are red
+ * around the detected barcodes are blue. The rest of the image will appear
+ * black and white, but the actual color mode will be RGB
  * 
  * @params[out]: pScratch -> output NDArray
  * @params[in]: img	-> Mat with barcode bounding boxes drawn
@@ -179,8 +191,6 @@ asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
 
 	size_t dataSize = img.step[0]*img.rows;
 
-	//printf("%d, %d\n", dataSize, arrayInfo.totalBytes);
-
 	if(dataSize != arrayInfo.totalBytes){
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, invalid array size\n", driverName, functionName);
 		img.release();
@@ -204,7 +214,7 @@ asynStatus NDPluginBar::mat2NDArray(NDArray* pScratch, Mat &img){
  * Function used to use a form of thresholding to reverse the coloration of a bar code
  * or QR code that is in the white on black format rather than the standard black on white
  *
- * @params[out]: img -> image containing inverse QR code
+ * @params[out]: img -> image containing inverse QR code. Required to be 8 bit
  * @return: status -> if image is 8 bit, then invert it and success, otherwise, error
  */
 asynStatus NDPluginBar::fix_inverted(Mat &img){
@@ -339,10 +349,6 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img){
 		bar_QR_code barQR;
 		barQR.type = symbol->get_type_name();
 		barQR.data = symbol->get_data();
-
-		//print information
-		//cout << "Type: " << barQR.type << endl;
-		//cout << "Data: " << barQR.data << endl << endl;
 
 		//set PVs
 		setStringParam(barcodeTypePVs[counter], barQR.type);
@@ -562,7 +568,12 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 }
 
 
-
+/**
+ * External configure function. This will be called from the IOC shell of the
+ * detector the plugin is attached to, and will create an instance of the plugin and start it
+ * 
+ * @params[in]	-> all passed to constructor
+ */
 extern "C" int NDBarConfigure(const char *portName, int queueSize, int blockingCallbacks,
 		const char *NDArrayPort, int NDArrayAddr,
 		int maxBuffers, size_t maxMemory,
@@ -573,6 +584,8 @@ extern "C" int NDBarConfigure(const char *portName, int queueSize, int blockingC
 	return pPlugin->start();
 }
 
+
+/* IOC shell arguments passed to the plugin configure function */
 static const iocshArg initArg0 = { "portName",iocshArgString};
 static const iocshArg initArg1 = { "frame queue size",iocshArgInt};
 static const iocshArg initArg2 = { "blocking callbacks",iocshArgInt};
@@ -592,8 +605,12 @@ static const iocshArg * const initArgs[] = {&initArg0,
 					&initArg7,
 					&initArg8};
 
+
+/* Definition of the configure function for NDPluginBar in the IOC shell */
 static const iocshFuncDef initFuncDef = {"NDBarConfigure",9,initArgs};
 
+
+/* link the configure function with the passed args, and call it from the IOC shell */
 static void initCallFunc(const iocshArgBuf *args){
 	NDBarConfigure(args[0].sval, args[1].ival, args[2].ival,
 			args[3].sval, args[4].ival, args[5].ival,
@@ -601,10 +618,13 @@ static void initCallFunc(const iocshArgBuf *args){
 }
 
 
+/* function to register the configure function in the IOC shell */
 extern "C" void NDBarRegister(void){
 	iocshRegister(&initFuncDef,initCallFunc);
 }
 
+
+/* Exports plugin registration */
 extern "C" {
 	epicsExportRegistrar(NDBarRegister);
 }
