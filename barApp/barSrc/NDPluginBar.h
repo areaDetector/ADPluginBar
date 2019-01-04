@@ -72,6 +72,8 @@ class NDPluginBar : public NDPluginDriver {
 			const char* NDArrayPort, int NDArrayAddr, int maxBuffers,
 			size_t maxMemory, int priority, int stackSize);
 
+		//~NDPluginBar();
+
 		void processCallbacks(NDArray *pArray);
 
 		virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
@@ -128,6 +130,7 @@ class NDPluginBar : public NDPluginDriver {
 
 		//lower right pixel of found bar code
 		int NDPluginBarLowerRightY;
+		#define ND_BAR_LAST_PARAM NDPluginBarLowerRightY
 
 	private:
 
@@ -169,5 +172,7 @@ class NDPluginBar : public NDPluginDriver {
 		asynStatus updateCorners(bar_QR_code &discovered);
 
 };
+
+#define NUM_BAR_PARAMS ((int)(&ND_BAR_LAST_PARAM - &ND_BAR_FIRST_PARAM + 1))
 
 #endif

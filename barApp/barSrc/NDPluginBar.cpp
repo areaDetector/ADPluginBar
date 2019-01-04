@@ -58,14 +58,14 @@ asynStatus NDPluginBar::initPVArrays(){
 	barcodeTypePVs[4] = NDPluginBarBarcodeType5;
 
 	cornerXPVs[0] = NDPluginBarUpperLeftX;
-	cornerXPVs[2] = NDPluginBarUpperRightX;
-	cornerXPVs[3] = NDPluginBarLowerLeftX;
-	cornerXPVs[4] = NDPluginBarLowerRightX;
+	cornerXPVs[1] = NDPluginBarUpperRightX;
+	cornerXPVs[2] = NDPluginBarLowerLeftX;
+	cornerXPVs[3] = NDPluginBarLowerRightX;
 
 	cornerYPVs[0] = NDPluginBarUpperLeftY;
-	cornerYPVs[2] = NDPluginBarUpperRightY;
-	cornerYPVs[3] = NDPluginBarLowerLeftY;
-	cornerYPVs[4] = NDPluginBarLowerRightY;
+	cornerYPVs[1] = NDPluginBarUpperRightY;
+	cornerYPVs[2] = NDPluginBarLowerLeftY;
+	cornerYPVs[3] = NDPluginBarLowerRightY;
 
 	return asynSuccess;
 }
@@ -89,6 +89,7 @@ void NDPluginBar::printCVError(cv::Exception &e, const char* functionName){
  */
 asynStatus NDPluginBar::clearPreviousCodes(){
 	codes_in_image.clear();
+	setIntegerParam(NDPluginBarNumberCodes, 0);
 	return asynSuccess;
 }
 
@@ -425,7 +426,7 @@ asynStatus NDPluginBar::writeInt32(asynUser* pasynUser, epicsInt32 value){
 
 	if(function == NDPluginBarCodeCorners){
 		int i;
-		if(codes_in_image.size() < value){
+		if(codes_in_image.size() <= value){
 			for(i = 0; i < 4; i++){
 				setIntegerParam(cornerXPVs[i], 0);
 				setIntegerParam(cornerYPVs[i], 0);
