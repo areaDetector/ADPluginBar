@@ -24,9 +24,9 @@ using namespace zbar;
 #include "NDPluginDriver.h"
 
 //version numbers
-#define BAR_VERSION      	1
-#define BAR_REVISION     	1
-#define BAR_MODIFICATION 	6
+#define BAR_VERSION      	2
+#define BAR_REVISION     	0
+#define BAR_MODIFICATION 	0
 
 // Number of barcodes supported at one time
 #define NUM_CODES			5

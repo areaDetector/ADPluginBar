@@ -18,7 +18,7 @@ files respectively, in the configure/ directory of the appropriate release of th
 
 Release Notes
 =============
-R2-0 (???-January-2018)
+R2-0 (4-January-2018)
 ----
 * Features Added:
 	* Corners can now be displayed for any of the 5 barcodes via a PV toggle
