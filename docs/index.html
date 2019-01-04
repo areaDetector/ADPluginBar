@@ -23,27 +23,140 @@
     <h3>Using ADPluginBar</h3>
     <p><i>The sample image used in all screens in this document captured with a prosilica camera</i></p>
     <img src="screenshots/barcode.png" width="500" height="auto" alt="barcode" />
-    <p>ADPluginBar (current version 1-1) has several requirements for proper functionality. It currently only accepts 8-bit mono images, though support<br/>
-        for other formats is planned in the future. Some conversion information is included in a file in the barSrc directory. Additionally, though inverted<br/>
-        bar codes are supported, they require a PV flag to be set, and thus cannot be read in conjunction with standard bar or QR codes. This is another feature<br/>
+    <p>ADPluginBar (current version 2-0) has several requirements for proper functionality. As pf R2-0, 8 bit and 16 bit images are supported, in both Mono and RGB mode.<br/>
+        Not that the image will be converted to grayscale if input is in RGB. Output arrays from the plugin will be in RGB because barcode bounding boxes are displayed in blue.<br/>
+        Some conversion information between NDArrays and OpenCV Mat objects used as a conversion element is included in a file in the barSrc directory. Additionally, though inverted<br/>
+        bar codes are supported, they require a PV flag to be set, and thus cannot be read in conjunction with standard bar or QR codes. They are also only supported in 8-bit mode. This is another feature<br/>
         that is being considered for a future release.<br/><br/>
         Once ADPluginBar is installed, Some edits must be made to the common plugins screen linked to your detector. It should look as follows:
     </p>
-    <img src="screenshots/commonplugins.png" width="500" height="auto" alt="commonplugins" />
+    <img src="screenshots/commonplugins.png" width="700" height="auto" alt="commonplugins" />
     <p>The Address that should be passed to each of the elements is Bar1. Thus, the entire PV would be, for example, "$(P)Bar1:PortName_RBV" for the portname field.<br/>
         The "more" button should be linked to the provided "NDPluginBar.opi" screen, or an equivalent adl or edl screen. (Currently only CSS screens are provided, though<br/>
         other types may be looked into in the future.) The NDPluginBar.opi screen looks as follows:
     </p>
-    <img src="screenshots/Barcodemain.png" width="500" height="auto" alt="NDPluginBar.opi"/>
+    <img src="screenshots/Barcodemain.png" width="700" height="auto" alt="NDPluginBar.opi"/>
     <p>ADPluginBar supports reading up to 5 bar codes simultaneously, though currently only the first discovered barcode has its coordinates stored as a PV.<br/>
         In order to access the remaining 4 barcodes, simply press the button titled: "View 1-5". Once pressed, the following screen will display:
     </p>
     <img src="screenshots/bar1-5.png" width="500" height="auto" alt="barcodes1-5" />
     <p>As you can see, in the sample image used above, two barcodes are present, the QR code which was generated with a test message, and a two dimensional barcode taken form<br/>
         a box from around the test area. Both codes were detected ane placed into PVs BarcodeMessage1_RBV, BarcodeType1_RBV and the '2' equivalents.<br/><br/>
-        For more information on the newest release of ADPluginBar please check the RELEASE.md file in the top level directory. Additionally, please contact the<br/>
-        author with any questions regarding the usage of the plugin or feature requests.
     </p>
-    <h3>copyright: Brookhaven National Laboratory 2017/2018</h3>
+    <img src="screenshots/liveupdate.png" width="1000" height="auto" alt="liveupdate" />
+    <p>As of release R2-0, ADPluginBar supports a live view of the detected barcodes in an image. To use this feature, set use any EPICS viewer, and set the Array Port to BAR1,<br/>
+    or whatever port your plugin has been set to. In the image above, I used the NDPluginStdArrays plugin for viewing in CSS. When a barcode is detected, a blue bounding box is drawn<br/>
+    around the code.<br/><br/>
+    For more information on the newest release of ADPluginBar please check the RELEASE.md file in the top level directory. Additionally, please contact the<br/>
+    author with any questions regarding the usage of the plugin or feature requests.</p>
+
+    <hr/>
+    <h3>Code Documentation</h3>
+
+    <p>Below is an explanation of functions included in ADPluginBar and the general plugin structure.</p>
+    
+    <h5>ADPluginBar File structure</h5>
+    <img src="screenshots/fileStructure.png" width="400" height="auto" alt="ADPluginBar file structure" />
+    <p>All of the plugin Source code is housed in the barApp/barSrc directory. The barApp/Db/NDBar.template file contains PV definitions. barApp/screens contains CSS .opi files.</p>
+
+    <h4>Function definitions</h5>
+
+    <table style="width:75%; border: 1px solid black;">
+        <tr>
+            <th>Function Name</th>
+            <th>InputArgs</th>
+            <th>OutputArgs</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <th>initPVArrays</th>
+            <th>None</th>
+            <th>None</th>
+            <th>Function that places PV indexes into arrays for easier iteration</th>
+        </tr>
+        <tr>
+            <th>printCVError</th>
+            <th>None</th>
+            <th>None</th>
+            <th>Function for printing out OpenCV exception information</th>
+        </tr>
+        <tr>
+            <th>clearPreviousCodes</th>
+            <th>None</th>
+            <th>None</th>
+            <th>Function that clears out the currently detected barcodes.</th>
+        </tr>
+        <tr>
+            <th>ndArray2Mat</th>
+            <th>pArray, arrayInfo</th>
+            <th>img</th>
+            <th>Function that converts input NDArray pArray into output Mat img</th>
+        </tr>
+        <tr>
+            <th>mat2NDArray</th>
+            <th>img</th>
+            <th>pScratch</th>
+            <th>Function that converts input Mat img into output NDArray pScratch</th>
+        </tr>
+        <tr>
+            <th>fix_inverted</th>
+            <th>img</th>
+            <th>None</th>
+            <th>Function that inverts black and white in image to allow for detecting inverted codes</th>
+        </tr>
+        <tr>
+            <th>push_corners</th>
+            <th>symbol, update_corners</th>
+            <th>discovered</th>
+            <th>Function that updates poition of discovered code from symbol and updates PVs if update_corners flag set</th>
+        </tr>
+        <tr>
+            <th>update_corners</th>
+            <th>discovered</th>
+            <th>None</th>
+            <th>Function that updateds corner PVs to those of discovered</th>
+        </tr>
+        <tr>
+            <th>scan_image</th>
+            <th>img</th>
+            <th>None</th>
+            <th>Function that changes Mat to zbar image and scans it with zbar</th>
+        </tr>
+        <tr>
+            <th>clear_unused_barcode_pvs</th>
+            <th>counter</th>
+            <th>None</th>
+            <th>Function that resets PVs that had detected barcode earlier, but no longer do</th>
+        </tr>
+        <tr>
+            <th>decode_bar_codes</th>
+            <th>img</th>
+            <th>None</th>
+            <th>Function that scans image, then loops over any detected codes and updates PVs</th>
+        </tr>
+        <tr>
+            <th>show_bar_codes</th>
+            <th>img</th>
+            <th>None</th>
+            <th>Function that takes list of discovered codes and draws them on the image based on pushed corners</th>
+        </tr>
+        <tr>
+            <th>writeInt32</th>
+            <th>pasynUser, value</th>
+            <th>None</th>
+            <th>Function that is called when a PV is written to</th>
+        </tr>
+        <tr>
+            <th>processCallbacks</th>
+            <th>pArray</th>
+            <th>None</th>
+            <th>Function that is called for each NDArray created by the attached driver</th>
+        </tr>                        
+    </table>
+
+    <p>More detailed documentation can be found in the plugin Src.</p>
+
+
+    <h3>copyright: Brookhaven National Laboratory 2017-2019</h3>
 </body>
 </html>
