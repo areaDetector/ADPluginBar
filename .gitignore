@@ -5,6 +5,6 @@ lib
 include
 db
 dbd
-envPaths*
+envPaths
 O.linux-x86_64/
 .vscode/

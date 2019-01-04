@@ -25,7 +25,6 @@ record(waveform, "$(P)$(R)BarcodeMessage1_RBV"){
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE1")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -42,7 +41,6 @@ record(waveform, "$(P)$(R)BarcodeMessage2_RBV"){
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE2")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -59,7 +57,6 @@ record(waveform, "$(P)$(R)BarcodeMessage3_RBV"){
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE3")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -76,7 +73,6 @@ record(waveform, "$(P)$(R)BarcodeMessage4_RBV"){
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE4")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -93,7 +89,6 @@ record(waveform, "$(P)$(R)BarcodeMessage5_RBV"){
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_MESSAGE5")
 	field(FTVL, "CHAR")
 	field(NELM, "256")
-    field(VAL, "No Barcode Found")
 	field(SCAN, "I/O Intr")
 }
 
@@ -132,7 +127,7 @@ record(ai, "$(P)$(R)NumberCodes_RBV")
 record(mbbo, "$(P)$(R)CodeCorners"){
 	field(PINI, "YES")
 	field(DTYP, "asynInt32")
-	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS)
+	field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS")
 	field(ZRST, "Code 1")
 	field(ZRVL, "0")
 	field(ONST, "Code 2")
@@ -147,9 +142,9 @@ record(mbbo, "$(P)$(R)CodeCorners"){
 	field(autosaveFields, "VAL")
 }
 
-record(mbbo, "$(P)$(R)CodeCorners_RBV"){
+record(mbbi, "$(P)$(R)CodeCorners_RBV"){
 	field(DTYP, "asynInt32")
-	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS)
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))CODE_CORNERS")
 	field(ZRST, "Code 1")
 	field(ZRVL, "0")
 	field(ONST, "Code 2")
