@@ -51,6 +51,57 @@
     author with any questions regarding the usage of the plugin or feature requests.</p>
 
     <hr/>
+    <h3>Release Notes</h3>
+
+    <!--RELEASE START-->
+<h4>R2-0 (4-January-2018)</h4>
+<ul>
+<li>Features Added:<ul>
+<li>Corners can now be displayed for any of the 5 barcodes via a PV toggle</li>
+<li>Number Codes now lists the number of codes in the image not the total number of codes</li>
+<li>Passing the ADPluginBar Array Port to an EPICS Viewer allows for live display of detected barcodes and QR codes</li>
+<li>Support for both 8 bit and 16 bit images</li>
+<li>Added support for input of RGB images as opposed to only Mono images</li>
+<li>Barcode Message PVs changed to waveforms to increase max character count to 256</li>
+</ul>
+</li>
+<li>Bug Fixes/Code Refactoring:<ul>
+<li>Fixed issue where plugin would freeze in certain situations where codes were repeated.</li>
+<li>Removed redundant functions, split up large functions into more compact pieces</li>
+<li>Improved documentation for all functions</li>
+</ul>
+</li>
+<li>Future Plans:<ul>
+<li>Add support for automatic image saving when barcodes detected</li>
+<li>Support for databases like MySQL and MongoDB</li>
+</ul>
+</li>
+</ul>
+<h4>R1-1 (27-June-2018)</h4>
+<ul>
+<li>Several key features added and bugs fixed:<ul>
+<li>Support added for reading up to 5 codes in one image (Corner data stored in PV for first code)</li>
+<li>Support added for reading inverted bar codes i.e. white code on black background</li>
+<li>Fixed issue where number of barcodes would continue to increment when seeing the same bar code</li>
+<li>Fixed issuse where seeing the same barcode would cause an infinite loop of asyn messages in the IOC shell</li>
+</ul>
+</li>
+<li>Future plans:<ul>
+<li>Add ability to save image file with detected barcodes marked.</li>
+<li>Add ability to pipe information into an NDArray and display it in CSS</li>
+</ul>
+</li>
+</ul>
+<h4>R1-0 (22-June-2018)</h4>
+<ul>
+<li>Original release. Some issues that can be resolved with future releases:<ul>
+<li>Only mono images supported</li>
+<li>stringin record used for barcode message, so limit of 40 characters currently</li>
+</ul>
+</li>
+</ul>
+    <!--RELEASE END-->
+    <hr/>
     <h3>Code Documentation</h3>
 
     <p>Below is an explanation of functions included in ADPluginBar and the general plugin structure.</p>
