@@ -96,7 +96,7 @@ record(stringin, "$(P)$(R)BarcodeType5_RBV")
 {
 	field(DTYP, "asynOctetRead")
 	field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))BARCODE_TYPE5")
-    field(VAL, "None")
+    	field(VAL, "None")
 	field(SCAN, "I/O Intr")
 }
 
@@ -139,7 +139,7 @@ record(mbbo, "$(P)$(R)CodeCorners"){
 	field(FRST, "Code 5")
 	field(FRVL, "4")
 	field(VAL, "0")
-	field(autosaveFields, "VAL")
+#	field(autosaveFields, "VAL")
 }
 
 record(mbbi, "$(P)$(R)CodeCorners_RBV"){
