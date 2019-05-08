@@ -165,8 +165,8 @@ class NDPluginBar : public NDPluginDriver {
     asynStatus fix_inverted(Mat &img);
 
     //function that pushes barcode coordinate data to PVs
-    asynStatus push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners);
-    asynStatus updateCorners(bar_QR_code &discovered);
+    asynStatus push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners, int imgHeight);
+    asynStatus updateCorners(bar_QR_code &discovered, int imgHeight);
 };
 
 #define NUM_BAR_PARAMS ((int)(&ND_BAR_LAST_PARAM - &ND_BAR_FIRST_PARAM + 1))

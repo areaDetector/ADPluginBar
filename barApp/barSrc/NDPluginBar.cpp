@@ -239,12 +239,12 @@ asynStatus NDPluginBar::fix_inverted(Mat &img) {
  * @params[in]:  update_corners -> flag to see if it is the first detected code
  * @return: status
  */
-asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners) {
+asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners, int imgHeight) {
     for (int i = 0; i < symbol->get_location_size(); i++) {
         discovered.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
     }
     if (update_corners == 1) {
-        updateCorners(discovered);
+        updateCorners(discovered, imgHeight);
     }
     return asynSuccess;
 }
@@ -256,22 +256,24 @@ asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolItera
  * @params[in]: discovered	-> code from which we want corner info
  * @return: status
  */
-asynStatus NDPluginBar::updateCorners(bar_QR_code &discovered) {
+asynStatus NDPluginBar::updateCorners(bar_QR_code &discovered, int imgHeight) {
     //const char* functionName = "updateCorners";
+    int sizeY;
+    getIntegerParam(NDArraySizeY, &sizeY);
     int i;
     for (i = 0; i < 4; i++) {
         if (i == 0) {
             setIntegerParam(NDPluginBarUpperLeftX, discovered.position[i].x);
-            setIntegerParam(NDPluginBarUpperLeftY, discovered.position[i].y);
+            setIntegerParam(NDPluginBarUpperLeftY, imgHeight - discovered.position[i].y);
         } else if (i == 1) {
             setIntegerParam(NDPluginBarUpperRightX, discovered.position[i].x);
-            setIntegerParam(NDPluginBarUpperRightY, discovered.position[i].y);
+            setIntegerParam(NDPluginBarUpperRightY, imgHeight - discovered.position[i].y);
         } else if (i == 2) {
             setIntegerParam(NDPluginBarLowerLeftX, discovered.position[i].x);
-            setIntegerParam(NDPluginBarLowerLeftY, discovered.position[i].y);
+            setIntegerParam(NDPluginBarLowerLeftY, imgHeight - discovered.position[i].y);
         } else if (i == 3) {
             setIntegerParam(NDPluginBarLowerRightX, discovered.position[i].x);
-            setIntegerParam(NDPluginBarLowerRightY, discovered.position[i].y);
+            setIntegerParam(NDPluginBarLowerRightY, imgHeight - discovered.position[i].y);
         }
     }
     return asynSuccess;
@@ -355,9 +357,9 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
         //only the first code has its coordinates saved
         if (counter == code_corners) {
             //push location data
-            push_corners(barQR, symbol, 1);
+            push_corners(barQR, symbol, 1, img.size().height);
         } else {
-            push_corners(barQR, symbol, 0);
+            push_corners(barQR, symbol, 0, img.size().height);
         }
         codes_in_image.push_back(barQR);
 
