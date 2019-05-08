@@ -11,6 +11,18 @@ files respectively, in the configure/ directory of the appropriate release of th
 Release Notes
 =============
 <!--RELEASE START-->
+R2-1 (8-May-2019)
+----
+* Features Added:
+	* Threading has been added (similar to NDPluginDmtx) for much faster performance, and no lost frames
+* Bug Fixes
+	* Threading for improved performance removes issues with dropped frames when image size was too large
+	* Y-coordinate for corner PVs now indicates from the bottom up rather than from the top down
+* Future Plans
+	* Possible integration with [ADPluginDmtx](https://github.com/epicsNSLS2-areaDetector/ADPluginDmtx)
+	* Image autosaving when barcode detected
+	* Database integration
+
 R2-0 (4-January-2018)
 ----
 * Features Added:
