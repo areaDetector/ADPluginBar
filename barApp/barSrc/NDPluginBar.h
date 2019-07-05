@@ -25,9 +25,9 @@ using namespace zbar;
 #include "NDPluginDriver.h"
 
 //version numbers
-#define BAR_VERSION 2
-#define BAR_REVISION 2
-#define BAR_MODIFICATION 0
+#define BAR_VERSION         2
+#define BAR_REVISION        2
+#define BAR_MODIFICATION    0
 
 // Number of barcodes supported at one time
 #define NUM_CODES 5
@@ -131,8 +131,8 @@ class NDPluginBar : public NDPluginDriver {
         #define ND_BAR_LAST_PARAM NDPluginBarLowerRightY
 
     private:
-        // processing thread
-        bool processing = false;
+        // processing thread - unused
+        //bool processing = false;
 
         // arrays that hold indexes of PVs for messages and types
         int barcodeMessagePVs[NUM_CODES];

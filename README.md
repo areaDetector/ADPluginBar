@@ -55,7 +55,7 @@ and ensure the following is uncommented:
 
 ```
 # Optional: load NDPluginBar plugin
-NDBarConfigure("BAR1", $(QSIZE), 0, "$(PORT)", 0, 0, 0, 0)
+NDBarConfigure("BAR1", $(QSIZE), 0, "$(PORT)", 0, 0, 0, 0, 0, (MAX_THREADS=5))
 dbLoadRecords("$(ADPLUGINBAR)/db/NDBar.template",  "P=$(PREFIX),R=Bar1:, PORT=BAR1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT)")
 set_requestfile_path("$(ADPLUGINBAR)/barApp/Db")
 ```
