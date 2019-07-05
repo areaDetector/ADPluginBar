@@ -38,6 +38,7 @@ using namespace zbar;
 
 static const char *driverName = "NDPluginBar";
 
+
 //------------------------------------------------------
 // Functions called at init
 //------------------------------------------------------
@@ -69,6 +70,7 @@ asynStatus NDPluginBar::initPVArrays() {
     return asynSuccess;
 }
 
+
 //------------------------------------------------------
 // Utility functions for printing errors and for clearing previous codes
 //------------------------------------------------------
@@ -88,6 +90,7 @@ asynStatus NDPluginBar::clearPreviousCodes() {
     setIntegerParam(NDPluginBarNumberCodes, 0);
     return asynSuccess;
 }
+
 
 //------------------------------------------------------
 // Image type conversion functions
@@ -153,6 +156,7 @@ asynStatus NDPluginBar::ndArray2Mat(NDArray *pArray, NDArrayInfo *arrayInfo, Mat
     return asynSuccess;
 }
 
+
 /**
  * Function that converts Mat back into NDArray. This function is guaranteed to 
  * have either a 8 bit or 16 bit color image, because the bounding boxes drawn
@@ -165,30 +169,6 @@ asynStatus NDPluginBar::ndArray2Mat(NDArray *pArray, NDArrayInfo *arrayInfo, Mat
  */
 asynStatus NDPluginBar::mat2NDArray(NDArray *pScratch, Mat &img) {
     const char *functionName = "mat2NDArray";
-    int ndims = 3;
-    Size matSize = img.size();
-    NDDataType_t dataType;
-    NDColorMode_t colorMode = NDColorModeRGB1;
-    size_t dims[ndims];
-    dims[0] = 3;
-    dims[1] = matSize.width;
-    dims[2] = matSize.height;
-
-    if (img.depth() == CV_8U)
-        dataType = NDUInt8;
-    else if (img.depth() == CV_8S)
-        dataType = NDInt8;
-    else if (img.depth() == CV_16U)
-        dataType = NDUInt16;
-    else if (img.depth() == CV_16S)
-        dataType = NDInt16;
-
-    pScratch = pNDArrayPool->alloc(ndims, dims, dataType, 0, NULL);
-    if (pScratch == NULL) {
-        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, unable to allocate array\n", driverName, functionName);
-        img.release();
-        return asynError;
-    }
 
     NDArrayInfo arrayInfo;
     pScratch->getInfo(&arrayInfo);
@@ -202,16 +182,11 @@ asynStatus NDPluginBar::mat2NDArray(NDArray *pScratch, Mat &img) {
     }
 
     memcpy((unsigned char *)pScratch->pData, (unsigned char *)img.data, dataSize);
-    pScratch->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
-    pScratch->pAttributeList->add("DataType", "Data Type", NDAttrInt32, &dataType);
-    getAttributes(pScratch->pAttributeList);
-    doCallbacksGenericPointer(pScratch, NDArrayData, 0);
-    //release the array
-    pScratch->release();
     // now that data is copied to NDArray, we don't need mat anymore
     img.release();
     return asynSuccess;
 }
+
 
 /**
  * Function used to use a form of thresholding to reverse the coloration of a bar code
@@ -228,6 +203,7 @@ asynStatus NDPluginBar::fix_inverted(Mat &img) {
     subtract(Scalar(255), img, img);
     return asynSuccess;
 }
+
 
 /**
  * Function that is used simply to offload the process of setting the PV values
@@ -248,6 +224,7 @@ asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolItera
     }
     return asynSuccess;
 }
+
 
 /**
  * Function that updates corner coordinate PVs to those of
@@ -279,6 +256,7 @@ asynStatus NDPluginBar::updateCorners(bar_QR_code &discovered, int imgHeight) {
     return asynSuccess;
 }
 
+
 /**
  * Function that uses zbar to scan image for barcodes
  * 
@@ -297,6 +275,7 @@ Image NDPluginBar::scan_image(Mat &img) {
     return scannedImage;
 }
 
+
 /**
  * Function that clears any non-overwritten barcode PVs between array callbacks
  * 
@@ -313,6 +292,7 @@ asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter) {
     }
     return asynSuccess;
 }
+
 
 /**
  * Function that does the barcode decoding. It is passed an image and a vector
@@ -372,6 +352,7 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
     return asynSuccess;
 }
 
+
 /* Function that uses opencv methods with the locations of the discovered codes to place
  * bounding boxes around the areas of the image that contain barcodes. This is
  * so the user can confirm that the correct area of the image was discovered
@@ -385,7 +366,6 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
 asynStatus NDPluginBar::show_bar_codes(Mat &img) {
     const char *functionName = "show_bar_codes";
     try {
-        cvtColor(img, img, COLOR_GRAY2RGB);
         for (unsigned int i = 0; i < codes_in_image.size(); i++) {
             vector<Point> barPoints = codes_in_image[i].position;
             vector<Point> outside;
@@ -405,26 +385,21 @@ asynStatus NDPluginBar::show_bar_codes(Mat &img) {
     }
 }
 
-static void barcode_image_callback_wrapper(void* pPtr, NDArray* pArray){
-    NDPluginBar* pPlugin = (NDPluginBar*) pPtr;
-    pPlugin->barcode_image_callback(pArray);
-}
 
-asynStatus NDPluginBar::barcode_image_callback(NDArray* pArray){
-    //start with an empty array for copy and array info
-    NDArray *pScratch = NULL;
-    Mat img;
+/**
+ * Function called on each image recieved from the camera that performs the actual barcode scanning and decoding.
+ * First, checks if code is inverted, and if so inverts it. Then, it calls the decode_bar_codes function
+ * which searches for barcodes in the image. If they were found without error, barcodes are then drawn onto the Mat.
+ * Then the mat is coinverted to the output image.
+ * 
+ * @params[in]: img         -> Mat converted from NDArray sent to plugin in process callbacks
+ * @params[out]: pArrayOut  -> NDArray the plugin returns in endProcessCallbacks
+ * @return asynSuccess if processed correctly, asynError otherwise
+ */
+asynStatus NDPluginBar::barcode_image_callback(Mat &img, NDArray* pArrayOut){
     const char* functionName = "barcode_image_callback";
-    NDArrayInfo arrayInfo;
-    // convert to Mat
-    pArray->getInfo(&arrayInfo);
-    asynStatus status = ndArray2Mat(pArray, &arrayInfo, img);
-    if (status == asynError) {
-        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error converting to Mat\n", driverName, functionName);
-        this->processing = false;
-        return status;
-    }
     //check to see if we need to invert barcode
+    asynStatus status;
     int inverted_code;
     getIntegerParam(NDPluginBarInvertedBarcode, &inverted_code);
 
@@ -435,14 +410,15 @@ asynStatus NDPluginBar::barcode_image_callback(NDArray* pArray){
     else {
         status = decode_bar_codes(img);
     }
+    cvtColor(img, img, COLOR_GRAY2RGB);
     if (status != asynError) status = show_bar_codes(img);
-    status = mat2NDArray(pScratch, img);
+    status = mat2NDArray(pArrayOut, img);
     if (status == asynError) {
         asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, image not processed correctly\n", driverName, functionName);
     }
-    this->processing = false;
     return status;
 }
+
 
 /**
  * Override of NDPluginDriver function. Used when selecting between barcodes
@@ -483,6 +459,7 @@ asynStatus NDPluginBar::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     return status;
 }
 
+
 /* Process callbacks function inherited from NDPluginDriver.
  * Here it is overridden, and the following steps are taken:
  * 1) Check if the NDArray is mono, as zbar only accepts mono/grayscale images
@@ -496,65 +473,117 @@ asynStatus NDPluginBar::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 void NDPluginBar::processCallbacks(NDArray *pArray) {
     static const char *functionName = "processCallbacks";
 
+    Mat img;
+    NDArrayInfo arrayInfo;
+    NDArray* pScratch;
+    NDDataType_t dataType = NDUInt8;
+    // output will always be in 3 channel RGB mode
+    NDColorMode_t colorMode = NDColorModeRGB1;
+    int ndims = 3;
+    size_t dims[ndims];
+
     //call base class and get information about frame
     NDPluginDriver::beginProcessCallbacks(pArray);
+
+    // convert to Mat
+    pArray->getInfo(&arrayInfo);
+    asynStatus status = ndArray2Mat(pArray, &arrayInfo, img);
+    if (status == asynError) {
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error converting to Mat\n", driverName, functionName);
+        return;
+    }
+
+    // initialize output NDArray
+    Size matSize = img.size();
+    dims[0] = 3;
+    dims[1] = matSize.width;
+    dims[2] = matSize.height;
+
+    if (img.depth() == CV_8S)
+        dataType = NDInt8;
+    else if (img.depth() == CV_16U)
+        dataType = NDUInt16;
+    else if (img.depth() == CV_16S)
+        dataType = NDInt16;
+
+    pScratch = pNDArrayPool->alloc(ndims, dims, dataType, 0, NULL);
+    if (pScratch == NULL) {
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error, unable to allocate array\n", driverName, functionName);
+        img.release();
+        return;
+    }
 
     //unlock the mutex for the processing portion
     this->unlock();
 
-    if(!this->processing){
-        asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s::%s Starting processing thread\n", driverName, functionName);
-        this->processing = true;
-        thread processing_thread(barcode_image_callback_wrapper, this, pArray);
-        processing_thread.detach();
+    //if(!this->processing){
+    //    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s::%s Starting processing thread\n", driverName, functionName);
+    //    this->processing = true;
+    //    thread processing_thread(barcode_image_callback_wrapper, this, pArray);
+    //    processing_thread.detach();
+    //}
+
+    // process the image
+    status = barcode_image_callback(img, pScratch);
+    if(status != asynSuccess){
+        pScratch->release();
+        img.release();
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s::%s Error processing image\n", driverName, functionName);
+        return;
     }
 
     this->lock();
 
+    // push the image out using endProcess callbacks
+    pScratch->uniqueId = pArray->uniqueId;
+    pScratch->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
+    endProcessCallbacks(pScratch, false, true);
+
     callParamCallbacks();
 }
+
 
 //constructror from base class
 NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallbacks,
                          const char *NDArrayPort, int NDArrayAddr,
                          int maxBuffers, size_t maxMemory,
-                         int priority, int stackSize)
+                         int priority, int stackSize, int maxThreads)
     /* Invoke the base class constructor */
     : NDPluginDriver(portName, queueSize, blockingCallbacks,
                      NDArrayPort, NDArrayAddr, 1, maxBuffers, maxMemory,
                      asynInt32ArrayMask | asynFloat64ArrayMask | asynGenericPointerMask,
                      asynInt32ArrayMask | asynFloat64ArrayMask | asynGenericPointerMask,
-                     ASYN_MULTIDEVICE, 1, priority, stackSize, 1) {
+                     0, 1, priority, stackSize, maxThreads) {
     char versionString[25];
 
     //basic barcode parameters 1-5
-    createParam(NDPluginBarBarcodeMessage1String, asynParamOctet, &NDPluginBarBarcodeMessage1);
-    createParam(NDPluginBarBarcodeType1String, asynParamOctet, &NDPluginBarBarcodeType1);
-    createParam(NDPluginBarBarcodeMessage2String, asynParamOctet, &NDPluginBarBarcodeMessage2);
-    createParam(NDPluginBarBarcodeType2String, asynParamOctet, &NDPluginBarBarcodeType2);
-    createParam(NDPluginBarBarcodeMessage3String, asynParamOctet, &NDPluginBarBarcodeMessage3);
-    createParam(NDPluginBarBarcodeType3String, asynParamOctet, &NDPluginBarBarcodeType3);
-    createParam(NDPluginBarBarcodeMessage4String, asynParamOctet, &NDPluginBarBarcodeMessage4);
-    createParam(NDPluginBarBarcodeType4String, asynParamOctet, &NDPluginBarBarcodeType4);
-    createParam(NDPluginBarBarcodeMessage5String, asynParamOctet, &NDPluginBarBarcodeMessage5);
-    createParam(NDPluginBarBarcodeType5String, asynParamOctet, &NDPluginBarBarcodeType5);
+    createParam(NDPluginBarBarcodeMessage1String,   asynParamOctet,     &NDPluginBarBarcodeMessage1);
+    createParam(NDPluginBarBarcodeType1String,      asynParamOctet,     &NDPluginBarBarcodeType1);
+    createParam(NDPluginBarBarcodeMessage2String,   asynParamOctet,     &NDPluginBarBarcodeMessage2);
+    createParam(NDPluginBarBarcodeType2String,      asynParamOctet,     &NDPluginBarBarcodeType2);
+    createParam(NDPluginBarBarcodeMessage3String,   asynParamOctet,     &NDPluginBarBarcodeMessage3);
+    createParam(NDPluginBarBarcodeType3String,      asynParamOctet,     &NDPluginBarBarcodeType3);
+    createParam(NDPluginBarBarcodeMessage4String,   asynParamOctet,     &NDPluginBarBarcodeMessage4);
+    createParam(NDPluginBarBarcodeType4String,      asynParamOctet,     &NDPluginBarBarcodeType4);
+    createParam(NDPluginBarBarcodeMessage5String,   asynParamOctet,     &NDPluginBarBarcodeMessage5);
+    createParam(NDPluginBarBarcodeType5String,      asynParamOctet,     &NDPluginBarBarcodeType5);
 
     //common params
-    createParam(NDPluginBarNumberCodesString, asynParamInt32, &NDPluginBarNumberCodes);
-    createParam(NDPluginBarCodeCornersString, asynParamInt32, &NDPluginBarCodeCorners);
-    createParam(NDPluginBarInvertedBarcodeString, asynParamInt32, &NDPluginBarInvertedBarcode);
+    createParam(NDPluginBarNumberCodesString,       asynParamInt32,     &NDPluginBarNumberCodes);
+    createParam(NDPluginBarCodeCornersString,       asynParamInt32,     &NDPluginBarCodeCorners);
+    createParam(NDPluginBarInvertedBarcodeString,   asynParamInt32,     &NDPluginBarInvertedBarcode);
 
     //x coordinates
-    createParam(NDPluginBarUpperLeftXString, asynParamInt32, &NDPluginBarUpperLeftX);
-    createParam(NDPluginBarUpperRightXString, asynParamInt32, &NDPluginBarUpperRightX);
-    createParam(NDPluginBarLowerLeftXString, asynParamInt32, &NDPluginBarLowerLeftX);
-    createParam(NDPluginBarLowerRightXString, asynParamInt32, &NDPluginBarLowerRightX);
+    createParam(NDPluginBarUpperLeftXString,        asynParamInt32,     &NDPluginBarUpperLeftX);
+    createParam(NDPluginBarUpperRightXString,       asynParamInt32,     &NDPluginBarUpperRightX);
+    createParam(NDPluginBarLowerLeftXString,        asynParamInt32,     &NDPluginBarLowerLeftX);
+    createParam(NDPluginBarLowerRightXString,       asynParamInt32,     &NDPluginBarLowerRightX);
 
     //y coordinates
-    createParam(NDPluginBarUpperLeftYString, asynParamInt32, &NDPluginBarUpperLeftY);
-    createParam(NDPluginBarUpperRightYString, asynParamInt32, &NDPluginBarUpperRightY);
-    createParam(NDPluginBarLowerLeftYString, asynParamInt32, &NDPluginBarLowerLeftY);
-    createParam(NDPluginBarLowerRightYString, asynParamInt32, &NDPluginBarLowerRightY);
+    createParam(NDPluginBarUpperLeftYString,        asynParamInt32,     &NDPluginBarUpperLeftY);
+    createParam(NDPluginBarUpperRightYString,       asynParamInt32,     &NDPluginBarUpperRightY);
+    createParam(NDPluginBarLowerLeftYString,        asynParamInt32,     &NDPluginBarLowerLeftY);
+    createParam(NDPluginBarLowerRightYString,       asynParamInt32,     &NDPluginBarLowerRightY);
 
     initPVArrays();
 
@@ -563,6 +592,7 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
     setStringParam(NDDriverVersion, versionString);
     connectToArrayPort();
 }
+
 
 /**
  * External configure function. This will be called from the IOC shell of the
@@ -573,11 +603,12 @@ NDPluginBar::NDPluginBar(const char *portName, int queueSize, int blockingCallba
 extern "C" int NDBarConfigure(const char *portName, int queueSize, int blockingCallbacks,
                               const char *NDArrayPort, int NDArrayAddr,
                               int maxBuffers, size_t maxMemory,
-                              int priority, int stackSize) {
+                              int priority, int stackSize, int maxThreads) {
     NDPluginBar *pPlugin = new NDPluginBar(portName, queueSize, blockingCallbacks, NDArrayPort, NDArrayAddr,
-                                           maxBuffers, maxMemory, priority, stackSize);
+                                           maxBuffers, maxMemory, priority, stackSize, maxThreads);
     return pPlugin->start();
 }
+
 
 /* IOC shell arguments passed to the plugin configure function */
 static const iocshArg initArg0 = {"portName", iocshArgString};
@@ -589,6 +620,7 @@ static const iocshArg initArg5 = {"maxBuffers", iocshArgInt};
 static const iocshArg initArg6 = {"maxMemory", iocshArgInt};
 static const iocshArg initArg7 = {"priority", iocshArgInt};
 static const iocshArg initArg8 = {"stackSize", iocshArgInt};
+static const iocshArg initArg9 = {"maxThreads", iocshArgInt};
 static const iocshArg *const initArgs[] = {&initArg0,
                                            &initArg1,
                                            &initArg2,
@@ -597,22 +629,27 @@ static const iocshArg *const initArgs[] = {&initArg0,
                                            &initArg5,
                                            &initArg6,
                                            &initArg7,
-                                           &initArg8};
+                                           &initArg8,
+                                           &initArg9};
+
 
 /* Definition of the configure function for NDPluginBar in the IOC shell */
-static const iocshFuncDef initFuncDef = {"NDBarConfigure", 9, initArgs};
+static const iocshFuncDef initFuncDef = {"NDBarConfigure", 10, initArgs};
+
 
 /* link the configure function with the passed args, and call it from the IOC shell */
 static void initCallFunc(const iocshArgBuf *args) {
     NDBarConfigure(args[0].sval, args[1].ival, args[2].ival,
                    args[3].sval, args[4].ival, args[5].ival,
-                   args[6].ival, args[7].ival, args[8].ival);
+                   args[6].ival, args[7].ival, args[8].ival, args[9].ival);
 }
+
 
 /* function to register the configure function in the IOC shell */
 extern "C" void NDBarRegister(void) {
     iocshRegister(&initFuncDef, initCallFunc);
 }
+
 
 /* Exports plugin registration */
 extern "C" {
