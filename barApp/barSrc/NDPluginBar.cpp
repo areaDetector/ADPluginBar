@@ -93,14 +93,14 @@ asynStatus NDPluginBar::clearPreviousCodes() {
 /**
  * Function that checks if barcode was already discovered
  */
-bool NDPluginBar::codePreviouslyFound(bar_QR_code barQR){
+int NDPluginBar::codePreviouslyFound(bar_QR_code barQR){
     int i;
     for (i = 0; i< codes_in_image.size(); i++){
-        if(vector[i].data == barQR.data){
-            return true;
+        if(codes_in_image[i].data == barQR.data){
+            return i;
         }
     }
-    return false;
+    return -1;
 }
 
 
@@ -255,6 +255,7 @@ asynStatus NDPluginBar::fix_inverted(Mat &img) {
  * @return: status
  */
 asynStatus NDPluginBar::push_corners(bar_QR_code &discovered, Image::SymbolIterator &symbol, int update_corners, int imgHeight) {
+    discovered.position.clear();
     for (int i = 0; i < symbol->get_location_size(); i++) {
         discovered.position.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
     }
@@ -318,7 +319,7 @@ Image NDPluginBar::scan_image(Mat &img) {
  * @params[in]: counter -> number of codes detected in the new image
  * @return: success if set correctly otherwise error
  */
-asynStatus NDPluginBar::clear_unused_barcode_pvs(int counter) {
+asynStatus NDPluginBar::clearUnusedBarcodePvs(int counter) {
     //const char* functionName = "clear_unused_barcode_pvs";
     int i;
     for (i = counter; i < NUM_CODES; i++) {
@@ -348,6 +349,8 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
 
     //counter for number of codes in current image
     int counter = 0;
+    bool newCodeFound = false;
+    setIntegerParam(NDPluginBarNumberCodes, 0);
 
     for (Image::SymbolIterator symbol = scannedImage.symbol_begin(); symbol != scannedImage.symbol_end(); ++symbol) {
         //get information from detected bar code and populate a bar_QR_code struct
@@ -355,18 +358,17 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
         barQR.type = symbol->get_type_name();
         barQR.data = symbol->get_data();
 
-        if(!codePreviouslyFound(barQR)){
-            clearPreviousCodes();
-
+        int found = codePreviouslyFound(barQR);
+        if(found < 0){
+            if(!newCodeFound){
+                clearPreviousCodes();
+                clearUnusedBarcodePvs(counter);
+            }
+            newCodeFound = true;
             //set PVs
             setStringParam(barcodeTypePVs[counter], barQR.type);
             setStringParam(barcodeMessagePVs[counter], barQR.data);
             //iterate the number of discovered codes
-            int num_codes = 0;
-            getIntegerParam(NDPluginBarNumberCodes, &num_codes);
-            num_codes = num_codes + 1;
-            setIntegerParam(NDPluginBarNumberCodes, num_codes);
-
             int code_corners;
             getIntegerParam(NDPluginBarCodeCorners, &code_corners);
             //only the first code has its coordinates saved
@@ -377,13 +379,17 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
                 push_corners(barQR, symbol, 0, img.size().height);
             }
             codes_in_image.push_back(barQR);
-
-            counter++;
         }
-    }
+        else{
+            push_corners(codes_in_image[found], symbol, 0, img.size().height);
+        }
+        int num_codes = 0;
+        getIntegerParam(NDPluginBarNumberCodes, &num_codes);
+        num_codes = num_codes + 1;
+        setIntegerParam(NDPluginBarNumberCodes, num_codes);
+        counter++;
 
-    // clear any old barcode PVs that were not overwritten
-    clear_unused_barcode_pvs(counter);
+    }
 
     return asynSuccess;
 }
