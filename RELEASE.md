@@ -11,6 +11,17 @@ files respectively, in the configure/ directory of the appropriate release of th
 Release Notes
 =============
 <!--RELEASE START-->
+R2-2 (5-July-2019)
+----
+* Features Added:
+	* Support for maxThreads as used with other ADPlugins
+* Bug Fixes/Improvements
+	* Removed addAttribute call for data type
+	* Edit to use endProcessCallbacks instead of doCallbacksGenericPointer
+	* Doc/comments edited
+* Possible future plans
+	* PV for toggling image callbacks - Performance improvement and image view not always needed.
+
 R2-1 (8-May-2019)
 ----
 * Features Added:
