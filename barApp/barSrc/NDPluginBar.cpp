@@ -96,7 +96,7 @@ asynStatus NDPluginBar::clearPreviousCodes() {
 int NDPluginBar::codePreviouslyFound(bar_QR_code barQR){
     int i;
     for (i = 0; i< codes_in_image.size(); i++){
-        if(codes_in_image[i].data == barQR.data){
+        if(codes_in_image[i].data == barQR.data && codes_in_image[i].id == barQR.id){
             return i;
         }
     }
@@ -357,6 +357,7 @@ asynStatus NDPluginBar::decode_bar_codes(Mat &img) {
         bar_QR_code barQR;
         barQR.type = symbol->get_type_name();
         barQR.data = symbol->get_data();
+        barQR.id = counter;
 
         int found = codePreviouslyFound(barQR);
         if(found < 0){

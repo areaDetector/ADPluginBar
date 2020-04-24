@@ -60,6 +60,7 @@ typedef struct {
     string type;
     string data;
     vector<Point> position;
+    int id;
 } bar_QR_code;
 
 /* class that does barcode readings */
