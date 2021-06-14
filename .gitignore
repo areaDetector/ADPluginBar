@@ -7,4 +7,6 @@ db
 dbd
 envPaths
 O.linux-x86_64/
+O.Common
 .vscode/
+*OLD*
