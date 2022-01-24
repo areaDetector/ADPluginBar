@@ -9,7 +9,7 @@ include $(TOP)/configure/CONFIG
 #DB_OPT=YES
 
 DB+=NDBar.template
-
+DB+=NDBar_settings.req
 
 include $(TOP)/configure/RULES
 
