@@ -10,3 +10,4 @@ O.linux-x86_64/
 O.Common
 .vscode/
 *OLD*
+O.*-debug
