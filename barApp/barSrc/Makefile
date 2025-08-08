@@ -30,6 +30,10 @@ NDPluginBar_SRCS += NDPluginBar.cpp
 
 ifdef OPENCV_INCLUDE
     USR_INCLUDES += -I$(OPENCV_INCLUDE)
+else
+ifeq (linux-x86_64, $(findstring linux-x86_64, $(T_A)))
+    USR_INCLUDES += -I/usr/include/opencv4
+endif
 endif
 ifdef OPENCV_LIB
     NDPluginBar_DIR += $(OPENCV_LIB)
