@@ -3,7 +3,7 @@
 A Barcode reading plugin for EPICS Area Detector using OpenCV and Zbar libraries
 for barcode and QR code reading.
 
-Primary Author:    	Jakub Wlodek, 
+Primary Author:    	Jakub Wlodek,
 Corresponding Author: 	Kazimierz Gofron
 
 ### Installation and dependancies
@@ -17,7 +17,7 @@ respective repositories from github, or if on a debin/ubuntu system, slightly ol
 be downloaded using the package manager with the following commands:
 
 ```
-sudo apt install libopencv-dev 
+sudo apt install libopencv-dev
 sudo apt install libopencv-contrib-dev
 sudo apt install libzbar-dev
 ```
@@ -60,7 +60,7 @@ dbLoadRecords("$(ADPLUGINBAR)/db/NDBar.template",  "P=$(PREFIX),R=Bar1:, PORT=BA
 set_requestfile_path("$(ADPLUGINBAR)/barApp/Db")
 ```
 
-This will add ADPluginBar to the boot operation when the ioc is run.  
+This will add ADPluginBar to the boot operation when the ioc is run.
 
 Optionally:
 In the same directory, check the commonPlugin_settings.req file to make sure the following line is uncommented:
@@ -78,19 +78,19 @@ Next in the configure directory at the top level of areaDetector, open the RELEA
 ADPLUGINBAR=$(AREA_DETECTOR)/ADPluginBar
 ```
 
-This will tell areaDetector to include ADPluginBar at compilation.   
+This will tell areaDetector to include ADPluginBar at compilation.
 
-Then, in the CONFIG_SITE.local.$(YOUR HOST) file, ensure that the following is defined:  
+Then, in the CONFIG_SITE.local.$(YOUR HOST) file, ensure that the following is defined:
 
 ```
 # OPENCV_LIB and OPENCV_INCLUDE variables should not be defined if using the opencv system library in a default location
-WITH_OPENCV     = YES 
+WITH_OPENCV     = YES
 OPENCV          = /usr
 #OPENCV_LIB     = $(OPENCV)/lib64
 #OPENCV_INCLUDE = -I$(OPENCV)/include
 
 # ZBAR_LIB and ZBAR_INCLUDE variables should not be defined if using the zbar system library in a default location
-WITH_ZBAR       = YES 
+WITH_ZBAR       = YES
 ZBAR            = /usr
 #ZBAR_LIB       = $(ZBAR)/lib64
 #ZBAR_INCLUDE   = -I$(ZBAR)/include
@@ -115,7 +115,7 @@ You have now installed the ADPluginBar Plugin.
 ### Usage
 
 To use ADPluginBar with CSS, place the provided .opi screens into your CSS setup, and link to it
-appropriately. The plugin supports 8 and 16 bit images in Mono or RGB formats. Inverted barcodes are supported as well but only in 8 bit formats. In order to view detected barcodes live, you may use any EPICS image viewer such as ImageJ, NDPluginStdArrays, or NDPluginPva, by setting the NDArrayPort to BAR1, or whichever port the plugin was assigned. This will display the image that the plugin processes, along with a blue bounding box around barcodes detected. 
+appropriately. The plugin supports 8 and 16 bit images in Mono or RGB formats. Inverted barcodes are supported as well but only in 8 bit formats. In order to view detected barcodes live, you may use any EPICS image viewer such as ImageJ, NDPluginStdArrays, or NDPluginPva, by setting the NDArrayPort to BAR1, or whichever port the plugin was assigned. This will display the image that the plugin processes, along with a blue bounding box around barcodes detected.
 
 ### Process Variables Supported
 
@@ -129,7 +129,7 @@ CodeCorners     | Allows for selecting which detected code's corners to track in
 UpperLeftX	|  X-coordinate of the upper left corner of the detected barcode
 UpperRightX	|  X-coordinate of the upper right corner of the detected barcode
 LowerLeftX	|  X-coordinate of the lower left corner of the detected barcode
-LowerRightX	|  X-coordinate of the lower right corner of the detected barcode 
+LowerRightX	|  X-coordinate of the lower right corner of the detected barcode
 UpperLeftY	|  Y-coordinate of the upper left corner of the detected barcode
 UpperRightY	|  Y-coordinate of the upper right corner of the detected barcode
 LowerLeftY	|  Y-coordinate of the lower left corner of the detected barcode
