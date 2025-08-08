@@ -46,7 +46,7 @@ ifdef ZBAR_LIB
     NDPluginBar_DIR += $(ZBAR_LIB)
 endif
 
-include $(AREA_DETECTOR)/ADCore/ADApp/commonLibraryMakefile
+include $(ADCORE)/ADApp/commonLibraryMakefile
 
 include $(TOP)/configure/RULES
 #----------------------------------------
